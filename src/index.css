@@ -1,0 +1,165 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Hide scrollbar */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 0%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 0%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 0%;
+
+    --primary: 348 100% 58%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 0 0% 96%;
+    --secondary-foreground: 0 0% 0%;
+
+    --muted: 0 0% 96%;
+    --muted-foreground: 240 3.8% 46.1%;
+
+    --accent: 187 100% 93.5%;
+    --accent-foreground: 187 100% 35%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 0 0% 92%;
+    --input: 0 0% 92%;
+    --ring: 348 100% 58%;
+
+    --radius: 0.75rem;
+
+    --tiktok-red: 348 100% 58%;
+    --tiktok-cyan: 178 100% 48%;
+    --tiktok-blue: 212 95% 58%;
+    --tiktok-studio-bg: 0 0% 100%;
+    --tiktok-studio-card: 0 0% 96%;
+  }
+
+  .dark {
+    --background: 0 0% 0%;
+    --foreground: 0 0% 100%;
+
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 100%;
+
+    --popover: 0 0% 0%;
+    --popover-foreground: 0 0% 100%;
+
+    --primary: 348 100% 58%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 240 3.7% 15.1%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 240 3.7% 15.1%;
+    --muted-foreground: 240 5% 64.9%;
+
+    --accent: 187 100% 12%;
+    --accent-foreground: 187 100% 80%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 240 3.7% 15.1%;
+    --input: 240 3.7% 15.1%;
+    --ring: 348 100% 58%;
+
+    --tiktok-studio-bg: 0 0% 0%;
+    --tiktok-studio-card: 240 3.7% 10%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+    overflow: hidden;
+    overscroll-behavior: none;
+    overscroll-behavior-y: none;
+    -webkit-overflow-scrolling: touch;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    user-select: none;
+    touch-action: pan-y;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family: 'DM Sans', sans-serif;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+@layer utilities {
+  .icon-theme-invert {
+    filter: invert(1);
+  }
+  .light .icon-theme-invert {
+    filter: invert(0);
+  }
+
+  .text-tiktok-red {
+    color: hsl(var(--tiktok-red));
+  }
+  .text-tiktok-cyan {
+    color: hsl(var(--tiktok-cyan));
+  }
+  .text-tiktok-gray {
+    color: hsl(var(--tiktok-gray));
+  }
+  .text-tiktok-light-gray {
+    color: hsl(var(--tiktok-light-gray));
+  }
+  .text-tiktok-success {
+    color: hsl(var(--tiktok-success));
+  }
+  .text-tiktok-warning {
+    color: hsl(var(--tiktok-warning));
+  }
+  .text-tiktok-blue {
+    color: hsl(var(--tiktok-blue));
+  }
+  .bg-tiktok-dark {
+    background-color: hsl(var(--tiktok-dark));
+  }
+  .bg-tiktok-darker {
+    background-color: hsl(var(--tiktok-darker));
+  }
+  .bg-tiktok-card-hover {
+    background-color: hsl(var(--tiktok-card-hover));
+  }
+  .bg-tiktok-red {
+    background-color: hsl(var(--tiktok-red));
+  }
+  .border-tiktok-gray {
+    border-color: hsl(var(--tiktok-gray));
+  }
+
+  .insight-gradient {
+    background: linear-gradient(135deg, hsl(var(--tiktok-red) / 0.15), hsl(var(--tiktok-cyan) / 0.1));
+  }
+
+}

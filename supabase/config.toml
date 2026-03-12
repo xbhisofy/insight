@@ -1,0 +1,7 @@
+project_id = "wxmhvkygyheuaiieafee"
+
+[functions.validate-key]
+verify_jwt = false
+
+[functions.check-key-status]
+verify_jwt = false
