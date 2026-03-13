@@ -82,8 +82,8 @@ export default function ProfileAnalyticsPanel({ onClose }: ProfileAnalyticsPanel
           net_followers: { val: "-1", trend: "-1" },
         },
         graphData: {
-           total_followers: [18, 18, 18, 18, 18, 17, 17, 17],
-           net_followers: [0, 0, 0, 0, 0, -1, 0, 0]
+          total_followers: [18, 18, 18, 18, 18, 17, 17, 17],
+          net_followers: [0, 0, 0, 0, 0, -1, 0, 0]
         },
         genderData: [
           { label: "Male", pct: "68%", color: "#00a1ff" },
@@ -118,7 +118,7 @@ export default function ProfileAnalyticsPanel({ onClose }: ProfileAnalyticsPanel
     });
   };
   const [showLocationsDetail, setShowLocationsDetail] = useState(false);
-  
+
   // Global Edit Mode
   const [isEditing, setIsEditing] = useState(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -155,14 +155,14 @@ export default function ProfileAnalyticsPanel({ onClose }: ProfileAnalyticsPanel
           <button onClick={onClose} className="p-1 -ml-1">
             <ArrowLeft className="w-7 h-7 text-foreground" />
           </button>
-          
+
           <h1 className="flex-1 text-center font-black text-[17.5px] tracking-tight">
             <EditableVal val="Analytics" isEditing={isEditing} />
           </h1>
 
           <div className="w-7" />
         </div>
-        
+
         {/* Tabs */}
         <div className="flex w-full overflow-x-auto scrollbar-hide px-3 py-1 gap-6 border-b border-border bg-background">
           <div className="relative flex whitespace-nowrap px-1 gap-6">
@@ -180,14 +180,13 @@ export default function ProfileAnalyticsPanel({ onClose }: ProfileAnalyticsPanel
             <button
               key={f}
               onClick={() => {
-                 if (timeFilter !== f) {
-                    setTimeFilter(f);
-                    triggerLoading();
-                 }
+                if (timeFilter !== f) {
+                  setTimeFilter(f);
+                  triggerLoading();
+                }
               }}
-              className={`whitespace-nowrap px-[18px] py-[6px] rounded-full text-[14px] font-black transition-colors ${
-                timeFilter === f ? "bg-foreground text-background" : "bg-muted text-foreground hover:bg-muted/80"
-              }`}
+              className={`whitespace-nowrap px-[18px] py-[6px] rounded-full text-[14px] font-black transition-colors ${timeFilter === f ? "bg-foreground text-background" : "bg-muted text-foreground hover:bg-muted/80"
+                }`}
             >
               <EditableVal val={f} isEditing={isEditing} />
             </button>
@@ -195,7 +194,7 @@ export default function ProfileAnalyticsPanel({ onClose }: ProfileAnalyticsPanel
         </div>
       </div>
 
-      <div 
+      <div
         className="p-3 pb-20 relative min-h-[500px]"
         onPointerDown={handlePointerDown}
         onPointerUp={handlePointerUp}
@@ -204,10 +203,10 @@ export default function ProfileAnalyticsPanel({ onClose }: ProfileAnalyticsPanel
       >
         {loadingState === "skeleton" && (
           <div className="absolute inset-0 z-50 animate-in fade-in duration-200">
-             <SkeletonLoader />
+            <SkeletonLoader />
           </div>
         )}
-        
+
         {loadingState === "dots" && (
           <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/10 backdrop-blur-[1px] mt-20 animate-in fade-in duration-200">
             <TikTokLoader />
@@ -217,37 +216,37 @@ export default function ProfileAnalyticsPanel({ onClose }: ProfileAnalyticsPanel
         {loadingState === "none" && (
           <div>
             {activeTab === "overview" && (
-              <OverviewContent 
-                isEditing={isEditing} 
-                data={getFilterData(timeFilter).overview} 
-                onUpdate={(d) => updateFilterData("overview", d)} 
+              <OverviewContent
+                isEditing={isEditing}
+                data={getFilterData(timeFilter).overview}
+                onUpdate={(d) => updateFilterData("overview", d)}
               />
             )}
             {activeTab === "viewers" && (
-              <ViewersContent 
-                isEditing={isEditing} 
+              <ViewersContent
+                isEditing={isEditing}
                 data={getFilterData(timeFilter).viewers}
                 onUpdate={(d) => updateFilterData("viewers", d)}
-                onSeeMore={() => setShowLocationsDetail(true)} 
+                onSeeMore={() => setShowLocationsDetail(true)}
               />
             )}
             {activeTab === "inspiration" && (
-              <InspirationContent 
-                isEditing={isEditing} 
+              <InspirationContent
+                isEditing={isEditing}
                 data={getFilterData(timeFilter).inspiration}
                 onUpdate={(d) => updateFilterData("inspiration", d)}
               />
             )}
             {activeTab === "content" && (
-              <ContentTabContent 
-                isEditing={isEditing} 
+              <ContentTabContent
+                isEditing={isEditing}
                 data={getFilterData(timeFilter).content}
                 onUpdate={(d) => updateFilterData("content", d)}
               />
             )}
             {activeTab === "followers" && (
-              <FollowersContent 
-                isEditing={isEditing} 
+              <FollowersContent
+                isEditing={isEditing}
                 data={getFilterData(timeFilter).followers}
                 onUpdate={(d) => updateFilterData("followers", d)}
               />
@@ -258,40 +257,40 @@ export default function ProfileAnalyticsPanel({ onClose }: ProfileAnalyticsPanel
 
       {/* Locations Detail Overlay */}
       {showLocationsDetail && (
-        <div 
+        <div
           className="fixed inset-0 z-[70] bg-background overflow-y-auto scrollbar-hide"
           onPointerDown={handlePointerDown}
           onPointerUp={handlePointerUp}
           onPointerLeave={handlePointerUp}
         >
           <div className="sticky top-0 bg-background z-10 border-b border-border flex items-center justify-between px-4 h-[52px]">
-             <div className="w-8" />
-             <h2 className="text-[17.5px] font-black"><EditableVal val="Locations" isEditing={isEditing} /></h2>
-             <button onClick={() => setShowLocationsDetail(false)} className="p-1">
-                <X className="w-7 h-7 text-foreground" />
-             </button>
+            <div className="w-8" />
+            <h2 className="text-[17.5px] font-black"><EditableVal val="Locations" isEditing={isEditing} /></h2>
+            <button onClick={() => setShowLocationsDetail(false)} className="p-1">
+              <X className="w-7 h-7 text-foreground" />
+            </button>
           </div>
           <div className="p-5 space-y-[22px]">
-             {[
-               { label: "Nepal", pct: "45.6%" },
-               { label: "United States", pct: "6.9%" },
-               { label: "Germany", pct: "3.3%" },
-               { label: "India", pct: "3.3%" },
-               { label: "United Arab Emirates", pct: "2.9%" },
-               { label: "Canada", pct: "2.6%" },
-               { label: "France", pct: "2.3%" },
-               { label: "United Kingdom", pct: "2.0%" },
-               { label: "Ukraine", pct: "2.0%" },
-               { label: "Philippines", pct: "1.6%" },
-               { label: "Other", pct: "27.5%" },
-             ].map((loc, idx) => (
-               <LocationBar key={idx} label={loc.label} pct={loc.pct} width={loc.pct} active={idx === 0 || idx === 10} isEditing={isEditing} />
-             ))}
-             {isEditing && (
-               <button className="w-full mt-4 py-3 rounded-lg border border-dashed border-border text-muted-foreground font-bold text-[13px] hover:bg-muted/50">
-                 + Add location
-               </button>
-             )}
+            {[
+              { label: "Nepal", pct: "45.6%" },
+              { label: "United States", pct: "6.9%" },
+              { label: "Germany", pct: "3.3%" },
+              { label: "India", pct: "3.3%" },
+              { label: "United Arab Emirates", pct: "2.9%" },
+              { label: "Canada", pct: "2.6%" },
+              { label: "France", pct: "2.3%" },
+              { label: "United Kingdom", pct: "2.0%" },
+              { label: "Ukraine", pct: "2.0%" },
+              { label: "Philippines", pct: "1.6%" },
+              { label: "Other", pct: "27.5%" },
+            ].map((loc, idx) => (
+              <LocationBar key={idx} label={loc.label} pct={loc.pct} width={loc.pct} active={idx === 0 || idx === 10} isEditing={isEditing} />
+            ))}
+            {isEditing && (
+              <button className="w-full mt-4 py-3 rounded-lg border border-dashed border-border text-muted-foreground font-bold text-[13px] hover:bg-muted/50">
+                + Add location
+              </button>
+            )}
           </div>
         </div>
       )}
@@ -326,7 +325,7 @@ const OverviewContent = ({ isEditing, data, onUpdate }: { isEditing: boolean, da
 
         <div className="grid grid-cols-2 gap-2 mb-4">
           {Object.entries(data.metrics).map(([key, m]: [string, any]) => (
-            <MetricCard 
+            <MetricCard
               key={key}
               isEditing={isEditing}
               id={key}
@@ -341,12 +340,12 @@ const OverviewContent = ({ isEditing, data, onUpdate }: { isEditing: boolean, da
         </div>
 
         <div className="relative h-[160px] mt-4 select-none">
-          {[getLimit(selectedMetric), Math.floor(getLimit(selectedMetric)*2/3), Math.floor(getLimit(selectedMetric)/3)].map((v, i) => (
+          {[getLimit(selectedMetric), Math.floor(getLimit(selectedMetric) * 2 / 3), Math.floor(getLimit(selectedMetric) / 3)].map((v, i) => (
             <div key={i} className="absolute right-0 text-[11px] text-muted-foreground/60 font-bold" style={{ top: `${i * 33}%`, transform: 'translateY(-50%)' }}>
-               <EditableVal val={v} isEditing={isEditing} />
+              <EditableVal val={v} isEditing={isEditing} />
             </div>
           ))}
-          
+
           {[0, 33, 66, 100].map(pct => (
             <div key={pct} className="absolute left-0 right-8 border-t border-dashed border-muted-foreground/20" style={{ top: `${pct}%` }} />
           ))}
@@ -354,13 +353,13 @@ const OverviewContent = ({ isEditing, data, onUpdate }: { isEditing: boolean, da
           <div className="absolute bottom-[-24px] left-0 text-[11px] text-muted-foreground/60 font-bold"><EditableVal val="Mar 3" isEditing={isEditing} /></div>
           <div className="absolute bottom-[-24px] right-8 text-[11px] text-muted-foreground/60 font-bold"><EditableVal val="Mar 9" isEditing={isEditing} /></div>
 
-          <DrawablePolygonGraph 
-            data={graphData[selectedMetric]} 
+          <DrawablePolygonGraph
+            data={graphData[selectedMetric]}
             onDataChange={(newData) => onUpdate({ graphData: { ...graphData, [selectedMetric]: newData } })}
-            maxVal={getLimit(selectedMetric)} 
-            isEditing={isEditing} 
-            gradientId={`grad-${selectedMetric}`} 
-            showTooltip={selectedMetric === "post_views"} 
+            maxVal={getLimit(selectedMetric)}
+            isEditing={isEditing}
+            gradientId={`grad-${selectedMetric}`}
+            showTooltip={selectedMetric === "post_views"}
           />
         </div>
 
@@ -376,7 +375,7 @@ const OverviewContent = ({ isEditing, data, onUpdate }: { isEditing: boolean, da
           <h2 className="text-[17px] font-black"><EditableVal val="Traffic source" isEditing={isEditing} /></h2>
           <Info className="w-4 h-4 text-muted-foreground px-[1px]" />
         </div>
-        
+
         <div className="space-y-[18px]">
           <TrafficBar label="For You" pct="72%" active={true} isEditing={isEditing} />
           <TrafficBar label="Following" pct="12%" isEditing={isEditing} />
@@ -397,7 +396,7 @@ const OverviewContent = ({ isEditing, data, onUpdate }: { isEditing: boolean, da
           ))}
         </div>
         {isEditing && (
-          <button 
+          <button
             onClick={() => onUpdate({ queries: [...queries, { label: "New query", pct: "0%", active: true }] })}
             className="w-full mt-6 py-3 rounded-lg border border-dashed border-border text-muted-foreground font-bold text-[13px] hover:bg-muted/50"
           >
@@ -426,7 +425,7 @@ const OverviewContent = ({ isEditing, data, onUpdate }: { isEditing: boolean, da
             </div>
           ))}
           {isEditing && (
-            <button 
+            <button
               onClick={() => onUpdate({ topPosts: [...data.topPosts, { id: data.topPosts.length + 1, title: "New Top Post", views: "0 views", date: "Just now" }] })}
               className="w-full mt-4 py-3 rounded-lg border border-dashed border-border text-muted-foreground font-bold text-[13px] hover:bg-muted/50"
             >
@@ -456,7 +455,7 @@ const ViewersContent = ({ isEditing, data, onUpdate, onSeeMore }: { isEditing: b
 
         <div className="grid grid-cols-2 gap-2 mb-4">
           {Object.entries(data.metrics).map(([key, m]: [string, any]) => (
-            <MetricCard 
+            <MetricCard
               key={key}
               isEditing={isEditing}
               id={key}
@@ -473,10 +472,10 @@ const ViewersContent = ({ isEditing, data, onUpdate, onSeeMore }: { isEditing: b
         <div className="relative h-[160px] mt-4 select-none">
           {[3501, 2334, 1167].map((v, i) => (
             <div key={i} className="absolute right-0 text-[11px] text-muted-foreground/50 font-bold" style={{ top: `${i * 33}%`, transform: 'translateY(-50%)' }}>
-               <EditableVal val={v} isEditing={isEditing} />
+              <EditableVal val={v} isEditing={isEditing} />
             </div>
           ))}
-          
+
           {[0, 33, 66, 100].map(pct => (
             <div key={pct} className="absolute left-0 right-8 border-t border-dashed border-muted-foreground/15" style={{ top: `${pct}%` }} />
           ))}
@@ -484,12 +483,12 @@ const ViewersContent = ({ isEditing, data, onUpdate, onSeeMore }: { isEditing: b
           <div className="absolute bottom-[-24px] left-0 text-[11px] text-muted-foreground/50 font-bold"><EditableVal val="Feb 10" isEditing={isEditing} /></div>
           <div className="absolute bottom-[-24px] right-8 text-[11px] text-muted-foreground/50 font-bold"><EditableVal val="Mar 9" isEditing={isEditing} /></div>
 
-          <DrawablePolygonGraph 
-             data={vGraphData[selectedMetric]} 
-             onDataChange={(newData) => onUpdate({ graphData: { ...vGraphData, [selectedMetric]: newData } })}
-             maxVal={3501} 
-             isEditing={isEditing} 
-             gradientId={`vgrad-${selectedMetric}`} 
+          <DrawablePolygonGraph
+            data={vGraphData[selectedMetric]}
+            onDataChange={(newData) => onUpdate({ graphData: { ...vGraphData, [selectedMetric]: newData } })}
+            maxVal={3501}
+            isEditing={isEditing}
+            gradientId={`vgrad-${selectedMetric}`}
           />
         </div>
       </div>
@@ -499,7 +498,7 @@ const ViewersContent = ({ isEditing, data, onUpdate, onSeeMore }: { isEditing: b
           <h2 className="text-[17px] font-black leading-tight"><EditableVal val="Viewer insights" isEditing={isEditing} /></h2>
           <Info className="w-4 h-4 text-muted-foreground px-[1px]" />
         </div>
-        
+
         <div className="flex gap-2 mb-4">
           <SubTabBtn label="Gender" active={insightTab === "gender"} onClick={() => onUpdate({ insightTab: "gender" })} isEditing={isEditing} />
           <SubTabBtn label="Age" active={insightTab === "age"} onClick={() => onUpdate({ insightTab: "age" })} isEditing={isEditing} />
@@ -509,7 +508,7 @@ const ViewersContent = ({ isEditing, data, onUpdate, onSeeMore }: { isEditing: b
         {insightTab === "gender" && (
           <div>
             <div className="relative w-full h-[180px] flex flex-col items-center justify-center mt-2 mb-2 select-none">
-              <HalfDonutChart 
+              <HalfDonutChart
                 segments={(data.genderData || [
                   { label: "Male", pct: "68%", color: "#00a1ff" },
                   { label: "Female", pct: "30%", color: "#00a1ff66" },
@@ -520,7 +519,7 @@ const ViewersContent = ({ isEditing, data, onUpdate, onSeeMore }: { isEditing: b
                 }))}
               />
             </div>
-            
+
             <div className="space-y-[1px] px-1">
               {(data.genderData || [
                 { label: "Male", pct: "68%", color: "#00a1ff" },
@@ -528,11 +527,11 @@ const ViewersContent = ({ isEditing, data, onUpdate, onSeeMore }: { isEditing: b
                 { label: "Other", pct: "2%", color: "#00a1ff1a" }
               ]).map((g: any, i: number, arr: any[]) => (
                 <React.Fragment key={i}>
-                  <GenderRow 
-                    color={g.color} 
-                    label={g.label} 
-                    pct={g.pct} 
-                    isEditing={isEditing} 
+                  <GenderRow
+                    color={g.color}
+                    label={g.label}
+                    pct={g.pct}
+                    isEditing={isEditing}
                     onUpdate={(v) => {
                       const currentData = data.genderData || arr;
                       const next = [...currentData];
@@ -549,13 +548,13 @@ const ViewersContent = ({ isEditing, data, onUpdate, onSeeMore }: { isEditing: b
 
         {insightTab === "age" && (
           <div>
-             <div className="space-y-[18px] px-1">
-                <LocationBar label="18 - 24" pct="53.2%" width="53.2%" active={true} isEditing={isEditing} hideChevron />
-                <LocationBar label="25 - 34" pct="37.1%" width="37.1%" active={true} isEditing={isEditing} hideChevron />
-                <LocationBar label="35 - 44" pct="5.9%" width="5.9%" active={true} isEditing={isEditing} hideChevron />
-                <LocationBar label="45 - 54" pct="2.7%" width="2.7%" active={true} isEditing={isEditing} hideChevron />
-                <LocationBar label="55+" pct="1.1%" width="1.1%" active={true} isEditing={isEditing} hideChevron />
-             </div>
+            <div className="space-y-[18px] px-1">
+              <LocationBar label="18 - 24" pct="53.2%" width="53.2%" active={true} isEditing={isEditing} hideChevron />
+              <LocationBar label="25 - 34" pct="37.1%" width="37.1%" active={true} isEditing={isEditing} hideChevron />
+              <LocationBar label="35 - 44" pct="5.9%" width="5.9%" active={true} isEditing={isEditing} hideChevron />
+              <LocationBar label="45 - 54" pct="2.7%" width="2.7%" active={true} isEditing={isEditing} hideChevron />
+              <LocationBar label="55+" pct="1.1%" width="1.1%" active={true} isEditing={isEditing} hideChevron />
+            </div>
           </div>
         )}
 
@@ -568,7 +567,7 @@ const ViewersContent = ({ isEditing, data, onUpdate, onSeeMore }: { isEditing: b
               <LocationBar label="India" pct="3.3%" width="3.3%" active={true} isEditing={isEditing} />
               <LocationBar label="United Arab Emirates" pct="2.9%" width="2.9%" active={true} isEditing={isEditing} />
             </div>
-            <button 
+            <button
               onClick={onSeeMore}
               className="w-full mt-6 py-3 rounded-xl bg-muted text-foreground font-bold text-[14.5px] hover:bg-muted/80 flex items-center justify-center border border-border"
             >
@@ -585,12 +584,12 @@ const ViewersContent = ({ isEditing, data, onUpdate, onSeeMore }: { isEditing: b
         </div>
 
         <div className="flex gap-2 mb-6">
-           <button className="px-4 py-2 rounded-lg text-[13px] font-bold bg-muted text-foreground">
-              <EditableVal val="Hours" isEditing={isEditing} />
-           </button>
-           <button className="px-4 py-2 rounded-lg text-[13px] font-bold bg-transparent text-muted-foreground/30">
-              <EditableVal val="Days" isEditing={isEditing} />
-           </button>
+          <button className="px-4 py-2 rounded-lg text-[13px] font-bold bg-muted text-foreground">
+            <EditableVal val="Hours" isEditing={isEditing} />
+          </button>
+          <button className="px-4 py-2 rounded-lg text-[13px] font-bold bg-transparent text-muted-foreground/30">
+            <EditableVal val="Days" isEditing={isEditing} />
+          </button>
         </div>
 
         <p className="text-foreground text-[14px] font-bold leading-[1.4] mb-8">
@@ -598,36 +597,36 @@ const ViewersContent = ({ isEditing, data, onUpdate, onSeeMore }: { isEditing: b
         </p>
 
         <div className="flex items-center justify-center gap-10 mb-8 font-bold">
-           <ChevronLeft className="w-5 h-5 text-muted-foreground/30" />
-           <span className="text-muted-foreground/30 text-[13px] uppercase tracking-wider"><EditableVal val="Mar 10" isEditing={isEditing} /></span>
-           <ChevronRight className="w-5 h-5 text-muted-foreground/30" />
+          <ChevronLeft className="w-5 h-5 text-muted-foreground/30" />
+          <span className="text-muted-foreground/30 text-[13px] uppercase tracking-wider"><EditableVal val="Mar 10" isEditing={isEditing} /></span>
+          <ChevronRight className="w-5 h-5 text-muted-foreground/30" />
         </div>
 
         <div className="relative h-[120px] select-none mt-2 px-2">
           {[24, 18, 12, 6, 0].map((v, i) => (
             <div key={i} className="absolute right-0 text-[11px] text-muted-foreground/60 font-bold" style={{ top: `${i * 25}%`, transform: 'translateY(-50%)' }}>
-               <EditableVal val={v} isEditing={isEditing} />
+              <EditableVal val={v} isEditing={isEditing} />
             </div>
           ))}
-          
+
           {[0, 25, 50, 75, 100].map(pct => (
             <div key={pct} className="absolute left-0 right-8 border-t border-dashed border-muted-foreground/20" style={{ top: `${pct}%` }} />
           ))}
 
-           <div className="absolute inset-0 right-8 flex items-end justify-between px-1">
-             {[12, 11, 13, 10, 15, 18, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0].map((h, idx) => (
-               <div key={idx} className={`w-[8px] rounded-t-[1px] transition-colors ${idx === 5 ? 'bg-accent-foreground/60' : 'bg-muted-foreground/20'}`} style={{ height: `${(h/24)*100}%` }}>
-                 {idx === 5 && (
-                   <div className="absolute bottom-[80%] left-1/2 -translate-x-1/2 z-10 pointer-events-none mb-1">
-                     <div className="bg-card rounded-lg border border-border p-2 shadow-xl flex flex-col items-start gap-0.5">
-                       <span className="text-[10px] text-foreground font-bold"><EditableVal val="5pm" isEditing={isEditing} /></span>
-                       <div className="w-full h-[1px] bg-border my-0.5" />
-                       <span className="text-[13px] text-foreground font-black leading-none"><EditableVal val="0" isEditing={isEditing} /></span>
-                     </div>
-                   </div>
-                 )}
-               </div>
-             ))}
+          <div className="absolute inset-0 right-8 flex items-end justify-between px-1">
+            {[12, 11, 13, 10, 15, 18, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0].map((h, idx) => (
+              <div key={idx} className={`w-[8px] rounded-t-[1px] transition-colors ${idx === 5 ? 'bg-accent-foreground/60' : 'bg-muted-foreground/20'}`} style={{ height: `${(h / 24) * 100}%` }}>
+                {idx === 5 && (
+                  <div className="absolute bottom-[80%] left-1/2 -translate-x-1/2 z-10 pointer-events-none mb-1">
+                    <div className="bg-card rounded-lg border border-border p-2 shadow-xl flex flex-col items-start gap-0.5">
+                      <span className="text-[10px] text-foreground font-bold"><EditableVal val="5pm" isEditing={isEditing} /></span>
+                      <div className="w-full h-[1px] bg-border my-0.5" />
+                      <span className="text-[13px] text-foreground font-black leading-none"><EditableVal val="0" isEditing={isEditing} /></span>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
 
           <div className="absolute bottom-[-24px] left-0 right-8 flex justify-between text-[11px] text-muted-foreground/60 font-bold">
@@ -647,20 +646,20 @@ const ViewersContent = ({ isEditing, data, onUpdate, onSeeMore }: { isEditing: b
           <span className="text-muted-foreground"><Info className="w-4 h-4 px-[1px]" /></span>
         </div>
         <div className="flex gap-6 overflow-x-auto scrollbar-hide pb-2">
-           {[
-             { name: "FallonTonight", followers: "28M followers" },
-             { name: "Saturday Nig...", followers: "13M followers" },
-             { name: "Blaseeeeeee...", followers: "5.2M followers" },
-             { name: "Subway Sur...", followers: "11M followers" }
-           ].map((c, i) => (
-             <div key={i} className="flex flex-col items-center min-w-[100px] text-center">
-                <div className="w-[82px] h-[82px] rounded-full overflow-hidden bg-muted mb-3 relative border border-border">
-                   <EditableImage isEditing={isEditing} className="rounded-full" />
-                </div>
-                <h3 className="text-[14px] font-bold text-foreground mb-1 truncate w-full px-1"><EditableVal val={c.name} isEditing={isEditing} /></h3>
-                <p className="text-[12px] text-muted-foreground font-bold"><EditableVal val={c.followers} isEditing={isEditing} /></p>
-             </div>
-           ))}
+          {[
+            { name: "FallonTonight", followers: "28M followers" },
+            { name: "Saturday Nig...", followers: "13M followers" },
+            { name: "Blaseeeeeee...", followers: "5.2M followers" },
+            { name: "Subway Sur...", followers: "11M followers" }
+          ].map((c, i) => (
+            <div key={i} className="flex flex-col items-center min-w-[100px] text-center">
+              <div className="w-[82px] h-[82px] rounded-full overflow-hidden bg-muted mb-3 relative border border-border">
+                <EditableImage isEditing={isEditing} className="rounded-full" />
+              </div>
+              <h3 className="text-[14px] font-bold text-foreground mb-1 truncate w-full px-1"><EditableVal val={c.name} isEditing={isEditing} /></h3>
+              <p className="text-[12px] text-muted-foreground font-bold"><EditableVal val={c.followers} isEditing={isEditing} /></p>
+            </div>
+          ))}
         </div>
       </div>
 
@@ -686,7 +685,7 @@ const InspirationContent = ({ isEditing, data, onUpdate }: { isEditing: boolean,
       <div className="bg-card rounded-xl p-5 relative overflow-hidden text-left border border-border">
         <h2 className="text-[20px] font-bold mb-1.5 text-foreground"><EditableVal val="Creation Inspiration" isEditing={isEditing} /></h2>
         <p className="text-muted-foreground text-[14px] mb-6 font-medium"><EditableVal val="Discover your next big idea!" isEditing={isEditing} /></p>
-        
+
         <div className="flex overflow-x-auto gap-2 mb-8 scrollbar-hide -mx-1 px-1">
           <button className="whitespace-nowrap px-[18px] py-[7.5px] rounded-full text-[14px] font-bold bg-foreground text-background shrink-0">
             <EditableVal val="Trending topics" isEditing={isEditing} />
@@ -709,32 +708,32 @@ const InspirationContent = ({ isEditing, data, onUpdate }: { isEditing: boolean,
             return (
               <div key={i} className="flex items-start gap-3">
                 <div className={`w-[20px] h-[20px] text-[11px] font-black rounded-[4px] flex shrink-0 items-center justify-center mt-1.5 ${bgRank} ${textRank}`}>
-                   <EditableVal val={i + 1} isEditing={isEditing} />
+                  <EditableVal val={i + 1} isEditing={isEditing} />
                 </div>
                 <div className="flex-1 min-w-0 pr-2">
-                   <h3 className="text-foreground font-bold text-[15.5px] leading-[1.3] mb-1.5"><EditableVal val={topic.text} isEditing={isEditing} /></h3>
-                   <div className="flex items-center gap-2">
-                      <div className="flex items-center gap-1">
-                        <Info className="w-3.5 h-3.5 text-muted-foreground/30" /> 
-                        <span className="text-muted-foreground text-[13px] font-bold"><EditableVal val={topic.count} isEditing={isEditing} /></span>
-                      </div>
-                      <div className="h-4 flex items-end gap-[1.5px]">
-                         {[40, 70, 50, 90, 60].map((h, k) => (
-                           <div key={k} className="w-[3px] bg-[#007aff]/30 rounded-full" style={{ height: `${h}%` }} />
-                         ))}
-                      </div>
-                   </div>
+                  <h3 className="text-foreground font-bold text-[15.5px] leading-[1.3] mb-1.5"><EditableVal val={topic.text} isEditing={isEditing} /></h3>
+                  <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1">
+                      <Info className="w-3.5 h-3.5 text-muted-foreground/30" />
+                      <span className="text-muted-foreground text-[13px] font-bold"><EditableVal val={topic.count} isEditing={isEditing} /></span>
+                    </div>
+                    <div className="h-4 flex items-end gap-[1.5px]">
+                      {[40, 70, 50, 90, 60].map((h, k) => (
+                        <div key={k} className="w-[3px] bg-[#007aff]/30 rounded-full" style={{ height: `${h}%` }} />
+                      ))}
+                    </div>
+                  </div>
                 </div>
                 <div className="w-[62px] h-[86px] rounded-lg bg-muted/30 flex-shrink-0 relative overflow-hidden border border-border/50">
-                   <EditableImage 
-                     src={topic.image} 
-                     isEditing={isEditing} 
-                     onUpdate={(src) => {
-                       const next = [...topics];
-                       next[i] = { ...next[i], image: src };
-                       onUpdate({ inspiration: { ...data, topics: next } });
-                     }}
-                   />
+                  <EditableImage
+                    src={topic.image}
+                    isEditing={isEditing}
+                    onUpdate={(src) => {
+                      const next = [...topics];
+                      next[i] = { ...next[i], image: src };
+                      onUpdate({ inspiration: { ...data, topics: next } });
+                    }}
+                  />
                 </div>
               </div>
             );
@@ -742,7 +741,7 @@ const InspirationContent = ({ isEditing, data, onUpdate }: { isEditing: boolean,
         </div>
 
         {isEditing && (
-          <button 
+          <button
             onClick={() => onUpdate({ topics: [...topics, { id: topics.length + 1, text: "New Trending Topic", count: "0" }] })}
             className="w-full mt-10 py-3.5 rounded-xl border border-dashed border-border text-muted-foreground font-bold text-[14.5px] hover:bg-muted/50"
           >
@@ -756,7 +755,7 @@ const InspirationContent = ({ isEditing, data, onUpdate }: { isEditing: boolean,
 
 const ContentTabContent = ({ isEditing, data, onUpdate }: { isEditing: boolean, data: any, onUpdate: (d: any) => void }) => {
   const videos = data.videos;
-  
+
   return (
     <div className="space-y-4 animate-in fade-in duration-300">
       <div className="bg-card rounded-xl p-4 border border-border text-left">
@@ -764,13 +763,13 @@ const ContentTabContent = ({ isEditing, data, onUpdate }: { isEditing: boolean, 
           <h2 className="text-[17px] font-bold"><EditableVal val="Video posts" isEditing={isEditing} /></h2>
           <Info className="w-4 h-4 text-muted-foreground px-[1px]" />
         </div>
-        
+
         <div className="flex gap-2 mb-6 overflow-x-auto scrollbar-hide">
-           {["Most views", "Most new viewers", "Most likes", "Most shares"].map(t => (
-             <button key={t} className={`whitespace-nowrap px-4 py-2 rounded-lg text-[13.5px] font-bold ${t === "Most views" ? "bg-muted text-foreground" : "bg-transparent text-muted-foreground/50"}`}>
-                <EditableVal val={t} isEditing={isEditing} />
-             </button>
-           ))}
+          {["Most views", "Most new viewers", "Most likes", "Most shares"].map(t => (
+            <button key={t} className={`whitespace-nowrap px-4 py-2 rounded-lg text-[13.5px] font-bold ${t === "Most views" ? "bg-muted text-foreground" : "bg-transparent text-muted-foreground/50"}`}>
+              <EditableVal val={t} isEditing={isEditing} />
+            </button>
+          ))}
         </div>
 
         <div className="flex flex-col gap-6">
@@ -778,9 +777,9 @@ const ContentTabContent = ({ isEditing, data, onUpdate }: { isEditing: boolean, 
             <div key={idx} className="flex gap-3">
               <span className="text-muted-foreground text-[13px] font-black mt-1 w-4 text-center leading-[1.3]"><EditableVal val={vid.id || idx + 1} isEditing={isEditing} /></span>
               <div className="relative w-[74px] h-[100px] bg-muted/30 rounded-xl flex-shrink-0 overflow-hidden border border-border/50">
-                <EditableImage 
-                  src={vid.image} 
-                  isEditing={isEditing} 
+                <EditableImage
+                  src={vid.image}
+                  isEditing={isEditing}
                   onUpdate={(src) => {
                     const next = [...videos];
                     next[idx] = { ...next[idx], image: src };
@@ -796,11 +795,13 @@ const ContentTabContent = ({ isEditing, data, onUpdate }: { isEditing: boolean, 
             </div>
           ))}
           {isEditing && (
-            <button 
-              onClick={() => onUpdate({ videos: [
-                ...videos, 
-                { id: videos.length + 1, title: "New Video", date: "Just now", views: "0", likes: "0", comments: "0" }
-              ] })}
+            <button
+              onClick={() => onUpdate({
+                videos: [
+                  ...videos,
+                  { id: videos.length + 1, title: "New Video", date: "Just now", views: "0", likes: "0", comments: "0" }
+                ]
+              })}
               className="w-full py-3.5 rounded-xl border border-dashed border-border text-muted-foreground font-bold text-[14.5px] hover:bg-muted/50 mt-4"
             >
               + Add video
@@ -828,7 +829,7 @@ const FollowersContent = ({ isEditing, data, onUpdate }: { isEditing: boolean, d
 
         <div className="grid grid-cols-2 gap-2 mb-8">
           {Object.entries(data.metrics).map(([key, m]: [string, any]) => (
-            <MetricCard 
+            <MetricCard
               key={key}
               isEditing={isEditing}
               id={key}
@@ -845,10 +846,10 @@ const FollowersContent = ({ isEditing, data, onUpdate }: { isEditing: boolean, d
         <div className="relative h-[160px] mt-8 select-none">
           {[24, 16, 8].map((v, i) => (
             <div key={v} className="absolute right-0 text-[11px] text-muted-foreground font-bold" style={{ top: `${i * 33}%`, transform: 'translateY(-50%)' }}>
-               <EditableVal val={v} isEditing={isEditing} />
+              <EditableVal val={v} isEditing={isEditing} />
             </div>
           ))}
-          
+
           {[0, 33, 66, 100].map(pct => (
             <div key={pct} className="absolute left-0 right-8 border-t border-dashed border-border" style={{ top: `${pct}%` }} />
           ))}
@@ -856,12 +857,12 @@ const FollowersContent = ({ isEditing, data, onUpdate }: { isEditing: boolean, d
           <div className="absolute bottom-[-24px] left-0 text-[11px] text-muted-foreground/50 font-bold"><EditableVal val="Mar 3" isEditing={isEditing} /></div>
           <div className="absolute bottom-[-24px] right-8 text-[11px] text-muted-foreground/50 font-bold"><EditableVal val="Mar 9" isEditing={isEditing} /></div>
 
-          <DrawablePolygonGraph 
-             data={fGraphData[selectedMetric]} 
-             onDataChange={(newData) => onUpdate({ graphData: { ...fGraphData, [selectedMetric]: newData } })}
-             maxVal={24} 
-             isEditing={isEditing} 
-             gradientId={`fgrad-${selectedMetric}`} 
+          <DrawablePolygonGraph
+            data={fGraphData[selectedMetric]}
+            onDataChange={(newData) => onUpdate({ graphData: { ...fGraphData, [selectedMetric]: newData } })}
+            maxVal={24}
+            isEditing={isEditing}
+            gradientId={`fgrad-${selectedMetric}`}
           />
         </div>
       </div>
@@ -871,7 +872,7 @@ const FollowersContent = ({ isEditing, data, onUpdate }: { isEditing: boolean, d
           <h2 className="text-[17px] font-bold"><EditableVal val="Follower insights" isEditing={isEditing} /></h2>
           <Info className="w-4 h-4 text-muted-foreground/30 px-[1px]" />
         </div>
-        
+
         <div className="flex gap-2 mb-8">
           <SubTabBtn label="Gender" active={insightTab === "gender"} onClick={() => onUpdate({ insightTab: "gender" })} isEditing={isEditing} />
           <SubTabBtn label="Age" active={insightTab === "age"} onClick={() => onUpdate({ insightTab: "age" })} isEditing={isEditing} />
@@ -880,41 +881,41 @@ const FollowersContent = ({ isEditing, data, onUpdate }: { isEditing: boolean, d
 
         {insightTab === "gender" && (
           <div className="animate-in fade-in duration-300">
-             <div className="relative w-full h-[180px] flex flex-col items-center justify-center mt-2 mb-2 select-none">
-               <HalfDonutChart 
-                 segments={(data.genderData || [
-                   { label: "Male", pct: "68%", color: "#00a1ff" },
-                   { label: "Female", pct: "30%", color: "#00a1ff66" },
-                   { label: "Other", pct: "2%", color: "#00a1ff1a" }
-                 ]).map((g: any) => ({
-                   value: parseFloat(g.pct.replace('%', '')) || 0,
-                   color: g.color || "#00a1ff"
-                 }))}
-               />
-             </div>
-             <div className="space-y-[1px] px-1">
-                {(data.genderData || [
+            <div className="relative w-full h-[180px] flex flex-col items-center justify-center mt-2 mb-2 select-none">
+              <HalfDonutChart
+                segments={(data.genderData || [
                   { label: "Male", pct: "68%", color: "#00a1ff" },
                   { label: "Female", pct: "30%", color: "#00a1ff66" },
                   { label: "Other", pct: "2%", color: "#00a1ff1a" }
-                ]).map((g: any, i: number, arr: any[]) => (
-                  <React.Fragment key={i}>
-                    <GenderRow 
-                      color={g.color} 
-                      label={g.label} 
-                      pct={g.pct} 
-                      isEditing={isEditing} 
-                      onUpdate={(v) => {
-                        const currentData = data.genderData || arr;
-                        const next = [...currentData];
-                        next[i] = { ...next[i], pct: v };
-                        onUpdate({ genderData: next });
-                      }}
-                    />
-                    {i < arr.length - 1 && <div className="h-[1px] bg-border w-full my-3" />}
-                  </React.Fragment>
-                ))}
-             </div>
+                ]).map((g: any) => ({
+                  value: parseFloat(g.pct.replace('%', '')) || 0,
+                  color: g.color || "#00a1ff"
+                }))}
+              />
+            </div>
+            <div className="space-y-[1px] px-1">
+              {(data.genderData || [
+                { label: "Male", pct: "68%", color: "#00a1ff" },
+                { label: "Female", pct: "30%", color: "#00a1ff66" },
+                { label: "Other", pct: "2%", color: "#00a1ff1a" }
+              ]).map((g: any, i: number, arr: any[]) => (
+                <React.Fragment key={i}>
+                  <GenderRow
+                    color={g.color}
+                    label={g.label}
+                    pct={g.pct}
+                    isEditing={isEditing}
+                    onUpdate={(v) => {
+                      const currentData = data.genderData || arr;
+                      const next = [...currentData];
+                      next[i] = { ...next[i], pct: v };
+                      onUpdate({ genderData: next });
+                    }}
+                  />
+                  {i < arr.length - 1 && <div className="h-[1px] bg-border w-full my-3" />}
+                </React.Fragment>
+              ))}
+            </div>
           </div>
         )}
 
@@ -928,12 +929,12 @@ const FollowersContent = ({ isEditing, data, onUpdate }: { isEditing: boolean, d
         </div>
 
         <div className="flex gap-2 mb-6">
-           <button className="px-4 py-2 rounded-lg text-[13px] font-bold bg-muted text-foreground">
-              <EditableVal val="Hours" isEditing={isEditing} />
-           </button>
-           <button className="px-4 py-2 rounded-lg text-[13px] font-bold bg-transparent text-muted-foreground/30">
-              <EditableVal val="Days" isEditing={isEditing} />
-           </button>
+          <button className="px-4 py-2 rounded-lg text-[13px] font-bold bg-muted text-foreground">
+            <EditableVal val="Hours" isEditing={isEditing} />
+          </button>
+          <button className="px-4 py-2 rounded-lg text-[13px] font-bold bg-transparent text-muted-foreground/30">
+            <EditableVal val="Days" isEditing={isEditing} />
+          </button>
         </div>
 
         <p className="text-muted-foreground text-[13.5px] font-bold leading-[1.4] mb-8">
@@ -1004,7 +1005,7 @@ const HalfDonutChart = ({ segments }: { segments: { value: number, color: string
   const strokeWidth = 28;
   const center = 100;
   const circumference = Math.PI * radius; // Half circle
-  
+
   const total = segments.reduce((acc, s) => acc + s.value, 0) || 1;
   let currentOffset = 0;
 
@@ -1020,7 +1021,8 @@ const HalfDonutChart = ({ segments }: { segments: { value: number, color: string
       />
       {segments.map((s, i) => {
         const sliceLength = (s.value / total) * circumference;
-        const strokeDasharray = `${sliceLength} ${circumference * 2}`;
+        // Add a tiny overlap (0.5) to prevent gaps
+        const strokeDasharray = `${sliceLength + 0.5} ${circumference * 2}`;
         const dashOffset = currentOffset;
         currentOffset -= sliceLength;
 
@@ -1061,9 +1063,9 @@ const EditableVal = ({ val, isEditing, className = "", onUpdate }: { val: string
     setInternalVal(val);
   }, [val]);
   return (
-    <span 
-      contentEditable={isEditing} 
-      suppressContentEditableWarning 
+    <span
+      contentEditable={isEditing}
+      suppressContentEditableWarning
       onPointerDown={e => { if (isEditing) e.stopPropagation(); }}
       onBlur={(e) => {
         const text = e.currentTarget.textContent || "";
@@ -1102,10 +1104,10 @@ const DrawablePolygonGraph = ({ data, onDataChange, maxVal, isEditing, gradientI
 
   return (
     <div className="absolute inset-0 w-[calc(100%-32px)] h-full overflow-visible">
-      <svg 
-        ref={svgRef} 
-        className={`absolute inset-0 w-full h-full overflow-visible ${isEditing ? "touch-none cursor-crosshair" : ""}`} 
-        viewBox="0 0 300 100" 
+      <svg
+        ref={svgRef}
+        className={`absolute inset-0 w-full h-full overflow-visible ${isEditing ? "touch-none cursor-crosshair" : ""}`}
+        viewBox="0 0 300 100"
         preserveAspectRatio="none"
         onPointerDown={e => {
           if (!isEditing) return;
@@ -1131,9 +1133,9 @@ const DrawablePolygonGraph = ({ data, onDataChange, maxVal, isEditing, gradientI
             <stop offset="100%" stopColor="#00a1ff" stopOpacity="0" />
           </linearGradient>
         </defs>
-        <polygon 
-          points={`0,100 ${data.map((v: number, i: number) => `${(i / (data.length - 1)) * 300},${100 - (v / maxVal) * 100}`).join(" ")} 300,100`} 
-          fill={`url(#${gradientId})`} 
+        <polygon
+          points={`0,100 ${data.map((v: number, i: number) => `${(i / (data.length - 1)) * 300},${100 - (v / maxVal) * 100}`).join(" ")} 300,100`}
+          fill={`url(#${gradientId})`}
         />
         {data.map((v: number, i: number) => {
           const x = (i / (data.length - 1)) * 300;
@@ -1149,7 +1151,7 @@ const DrawablePolygonGraph = ({ data, onDataChange, maxVal, isEditing, gradientI
           return <circle key={`point-${i}`} cx={x} cy={y} r="2" fill="#ffffff" stroke="#00a1ff" strokeWidth="1.5" />;
         })}
       </svg>
-      
+
       {showTooltip && (
         <div className="absolute right-[100px] bottom-[40px] z-10 pointer-events-none sm:pointer-events-auto">
           <div className="bg-card rounded-lg border border-border p-2 shadow-xl flex flex-col items-start gap-0.5">
@@ -1174,19 +1176,18 @@ const TabBtn = ({ label, active, onClick, dot, isEditing }: { label: string; act
 );
 
 const SubTabBtn = ({ label, active, onClick, isEditing }: { label: string; active: boolean; onClick: () => void; isEditing: boolean }) => (
-  <button 
-    onClick={onClick} 
-    className={`px-[18px] py-[7px] rounded-full text-[14px] font-bold ${
-      active ? "bg-foreground text-background" : "bg-muted text-foreground"
-    }`}
+  <button
+    onClick={onClick}
+    className={`px-[18px] py-[7px] rounded-full text-[14px] font-bold ${active ? "bg-foreground text-background" : "bg-muted text-foreground"
+      }`}
   >
     <EditableVal val={label} isEditing={isEditing} />
   </button>
 );
 
-const MetricCard = ({ 
+const MetricCard = ({
   id, label, selected, val, trend, onClick, isEditing, onUpdate
-}: { 
+}: {
   id: string; label: string; selected: boolean; val: string; trend: string; onClick: () => void; isEditing: boolean; onUpdate?: (d: any) => void;
 }) => {
   const [currentTrend, setCurrentTrend] = useState(trend);
@@ -1202,11 +1203,10 @@ const MetricCard = ({
   return (
     <button
       onClick={onClick}
-      className={`p-4 rounded-2xl border text-left flex flex-col justify-between min-h-[105px] ${
-        selected 
-          ? "bg-[#e9f8ff] border-[#bae5f8] dark:bg-[#00a1ff20] dark:border-[#00a1ff40]" 
+      className={`p-4 rounded-2xl border text-left flex flex-col justify-between min-h-[105px] ${selected
+          ? "bg-[#e9f8ff] border-[#bae5f8] dark:bg-[#00a1ff20] dark:border-[#00a1ff40]"
           : "border-border bg-card"
-      }`}
+        }`}
     >
       <span className="text-[13px] text-foreground/60 font-black capitalize tracking-tight">
         <EditableVal val={label} isEditing={isEditing} onUpdate={(v) => onUpdate?.({ label: v })} />
@@ -1227,13 +1227,13 @@ const MetricCard = ({
             </div>
           )}
           <span className={`text-[12px] font-bold ${trendType === "up" ? "text-[#00b2c1]" : (trendType === "down" ? "text-muted-foreground" : "text-muted-foreground/50")}`}>
-            <EditableVal 
-              val={trend} 
-              isEditing={isEditing} 
+            <EditableVal
+              val={trend}
+              isEditing={isEditing}
               onUpdate={(v) => {
                 setCurrentTrend(v);
                 onUpdate?.({ trend: v });
-              }} 
+              }}
             />
           </span>
         </div>
@@ -1260,8 +1260,11 @@ const TrafficBar = ({ label, pct, active = false, isEditing }: { label: string; 
         <span className="text-foreground shrink-0 pr-2"><EditableVal val={label} isEditing={isEditing} /></span>
         <span className="text-foreground font-black"><EditableVal val={currentPct} isEditing={isEditing} onUpdate={handleUpdate} /></span>
       </div>
-      <div className="w-full h-[12px] bg-muted/60 rounded-full overflow-hidden mt-1.5">
-        <div className="h-full rounded-full bg-[#00a1ff]" style={{ width: barWidth }} />
+      <div className="w-full h-[12px] bg-muted/60 rounded-full overflow-hidden mt-1.5 relative">
+        <div
+          className="h-full rounded-full bg-[#00a1ff] absolute left-0 top-0 transition-all duration-300"
+          style={{ width: barWidth }}
+        />
       </div>
     </div>
   );
@@ -1290,8 +1293,11 @@ const LocationBar = ({ label, pct, width, active = false, isEditing, hideChevron
           {!hideChevron && <ChevronRight className="w-4 h-4 text-muted-foreground/60" strokeWidth={3} />}
         </div>
       </div>
-      <div className="w-full h-[12px] bg-muted/60 rounded-full overflow-hidden mt-1.5">
-        <div className="h-full rounded-full bg-[#00a1ff]" style={{ width: barWidth }} />
+      <div className="w-full h-[12px] bg-muted/60 rounded-full overflow-hidden mt-1.5 relative">
+        <div
+          className="h-full rounded-full bg-[#00a1ff] absolute left-0 top-0 transition-all duration-300"
+          style={{ width: barWidth }}
+        />
       </div>
     </div>
   );
@@ -1313,7 +1319,7 @@ const EditableImage = ({ src, isEditing, className = "", onUpdate }: { src?: str
 
   return (
     <>
-      <div 
+      <div
         className={`absolute inset-0 z-10 flex items-center justify-center transition-all ${className} ${isEditing ? 'cursor-pointer hover:bg-foreground/10 bg-black/10' : ''}`}
         onClick={() => { if (isEditing) fileInputRef.current?.click(); }}
       >

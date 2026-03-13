@@ -191,7 +191,8 @@ const HalfDonutChart = ({ segments }: { segments: { value: number, color: string
       />
       {segments.map((s, i) => {
         const sliceLength = (s.value / total) * circumference;
-        const strokeDasharray = `${sliceLength} ${circumference * 2}`;
+        // Add tiny overlap to prevent white gaps between segments
+        const strokeDasharray = `${sliceLength + 0.5} ${circumference * 2}`;
         const dashOffset = currentOffset;
         currentOffset -= sliceLength;
 
@@ -225,6 +226,40 @@ const GenderRow = ({ color, label, pct, isEditing, onUpdate, className = "", sho
     </div>
   </div>
 );
+
+const MetricBar = ({ label, value, isEditing, onUpdate, onLabelUpdate, color = "#00a1ff", bgOpacity = "" }: { label: string; value: number; isEditing: boolean; onUpdate?: (v: number) => void; onLabelUpdate?: (v: string) => void; color?: string; bgOpacity?: string }) => {
+  const [currentValue, setCurrentValue] = useState(value);
+  const [barWidth, setBarWidth] = useState(value);
+
+  useEffect(() => {
+    setCurrentValue(value);
+    setBarWidth(value);
+  }, [value]);
+
+  const handleUpdate = (v: string) => {
+    const num = parseInt(v.replace(/[^0-9]/g, ''));
+    if (!isNaN(num)) {
+      setBarWidth(num);
+      setCurrentValue(num);
+      onUpdate?.(num);
+    }
+  };
+
+  return (
+    <div>
+      <div className="flex justify-between items-center text-[15px] mb-2 font-bold leading-tight">
+        <span className="text-foreground/90 truncate pr-2"><EditableVal val={label} isEditing={isEditing} onUpdate={onLabelUpdate} /></span>
+        <span className="text-foreground font-black"><EditableVal val={`${currentValue}%`} isEditing={isEditing} onUpdate={handleUpdate} /></span>
+      </div>
+      <div className={`w-full h-[12px] bg-muted rounded-full overflow-hidden mt-1.5 relative`}>
+        <div 
+          className="h-full rounded-full absolute left-0 top-0 transition-all duration-300" 
+          style={{ width: `${barWidth}%`, backgroundColor: color + bgOpacity }} 
+        />
+      </div>
+    </div>
+  );
+};
 
 const EditableImage = ({ isEditing }: { isEditing: boolean }) => {
   if (!isEditing) return null;
@@ -389,21 +424,25 @@ const OverviewTab = ({ ins, reel, isEditing, onUpdate }: { ins: ReelData["insigh
         </div>
         <div className="space-y-[15px]">
           {[
-            { label: "For You", value: ins.trafficSources.forYouPage },
-            { label: "Personal profile", value: ins.trafficSources.profile },
-            { label: "Following", value: ins.trafficSources.following },
-            { label: "Search", value: ins.trafficSources.search },
-            { label: "Other", value: ins.trafficSources.hashtags },
+            { label: "For You", value: ins.trafficSources.forYouPage, key: "forYouPage" },
+            { label: "Personal profile", value: ins.trafficSources.profile, key: "profile" },
+            { label: "Following", value: ins.trafficSources.following, key: "following" },
+            { label: "Search", value: ins.trafficSources.search, key: "search" },
+            { label: "Other", value: ins.trafficSources.hashtags, key: "hashtags" },
           ].sort((a, b) => b.value - a.value).map((item) => (
-            <div key={item.label}>
-              <div className="flex justify-between items-center text-[15px] mb-2 font-bold leading-tight">
-                <span className="text-foreground/90 truncate pr-2"><EditableVal val={item.label} isEditing={isEditing} /></span>
-                <span className="text-foreground font-black"><EditableVal val={`${item.value}%`} isEditing={isEditing} /></span>
-              </div>
-              <div className="w-full h-[12px] bg-secondary rounded-full overflow-hidden mt-1.5">
-                <div className="h-full rounded-full bg-[#00a1ff]" style={{ width: `${item.value}%` }} />
-              </div>
-            </div>
+            <MetricBar 
+              key={item.label}
+              label={item.label}
+              value={item.value}
+              isEditing={isEditing}
+              onUpdate={(v) => onUpdate({ trafficSources: { ...ins.trafficSources, [item.key]: v } })}
+              onLabelUpdate={(v) => {
+                // We're just updating the dummy label in item if it was stateful, 
+                // but traffic source labels are fixed in the UI usually. 
+                // If they really want to change "For You" to something else, 
+                // we'd need a mapping which isn't in the model yet.
+              }}
+            />
           ))}
         </div>
       </Card>
@@ -554,15 +593,22 @@ const ViewersTab = ({ ins, isEditing, onUpdate }: { ins: ReelData["insights"]; i
         </div>
         <div className="space-y-[18px]">
           {ins.ageGroups.map((group, i) => (
-            <div key={i}>
-              <div className="flex justify-between items-center text-[15px] mb-2 font-bold leading-tight">
-                <span className="text-foreground/90"><EditableVal val={group.range} isEditing={isEditing} /></span>
-                <span className="text-foreground font-black"><EditableVal val={`${group.percentage}%`} isEditing={isEditing} /></span>
-              </div>
-              <div className="w-full h-[12px] bg-muted rounded-full overflow-hidden mt-1.5">
-                <div className="h-full bg-[#00a1ff] rounded-full" style={{ width: `${group.percentage}%` }} />
-              </div>
-            </div>
+            <MetricBar 
+              key={i}
+              label={group.range}
+              value={group.percentage}
+              isEditing={isEditing}
+              onUpdate={(v) => {
+                const next = [...ins.ageGroups];
+                next[i] = { ...group, percentage: v };
+                onUpdate({ ageGroups: next });
+              }}
+              onLabelUpdate={(v) => {
+                const next = [...ins.ageGroups];
+                next[i] = { ...group, range: v };
+                onUpdate({ ageGroups: next });
+              }}
+            />
           ))}
         </div>
       </Card>
@@ -575,15 +621,28 @@ const ViewersTab = ({ ins, isEditing, onUpdate }: { ins: ReelData["insights"]; i
         </div>
         <div className="space-y-[18px]">
           {[...ins.audienceRegions].sort((a, b) => b.percentage - a.percentage).map((region, i) => (
-            <div key={i}>
-              <div className="flex justify-between items-center text-[15px] mb-2 font-bold leading-tight">
-                <span className="text-foreground/90 truncate pr-2"><EditableVal val={region.name} isEditing={isEditing} /></span>
-                <span className="text-foreground font-black"><EditableVal val={`${region.percentage}%`} isEditing={isEditing} /></span>
-              </div>
-              <div className="w-full h-[12px] bg-muted rounded-full overflow-hidden mt-1.5">
-                <div className="h-full bg-[#00a1ff] rounded-full" style={{ width: `${region.percentage}%` }} />
-              </div>
-            </div>
+            <MetricBar 
+              key={i}
+              label={region.name}
+              value={region.percentage}
+              isEditing={isEditing}
+              onUpdate={(v) => {
+                const next = [...ins.audienceRegions];
+                const realIdx = ins.audienceRegions.findIndex(r => r.name === region.name);
+                if (realIdx !== -1) {
+                  next[realIdx] = { ...region, percentage: v };
+                  onUpdate({ audienceRegions: next });
+                }
+              }}
+              onLabelUpdate={(v) => {
+                const next = [...ins.audienceRegions];
+                const realIdx = ins.audienceRegions.findIndex(r => r.name === region.name);
+                if (realIdx !== -1) {
+                  next[realIdx] = { ...region, name: v };
+                  onUpdate({ audienceRegions: next });
+                }
+              }}
+            />
           ))}
         </div>
       </Card>
@@ -594,24 +653,20 @@ const ViewersTab = ({ ins, isEditing, onUpdate }: { ins: ReelData["insights"]; i
           <Info className="w-3.5 h-3.5 text-muted-foreground/60" />
         </div>
         <div className="space-y-[22px]">
-          <div>
-            <div className="flex justify-between items-center text-[15px] mb-2 font-bold leading-tight">
-              <span className="text-foreground/90"><EditableVal val="New viewers" isEditing={isEditing} /></span>
-              <span className="text-foreground font-black"><EditableVal val={`${newViewerPct}%`} isEditing={isEditing} /></span>
-            </div>
-            <div className="w-full h-[12px] bg-muted rounded-full overflow-hidden mt-1.5">
-              <div className="h-full bg-[#00a1ff] rounded-full" style={{ width: `${newViewerPct}%` }} />
-            </div>
-          </div>
-          <div>
-            <div className="flex justify-between items-center text-[15px] mb-2 font-bold leading-tight">
-              <span className="text-foreground/90"><EditableVal val="Returning viewers" isEditing={isEditing} /></span>
-              <span className="text-foreground font-black"><EditableVal val={`${returningPct}%`} isEditing={isEditing} /></span>
-            </div>
-            <div className="w-full h-[12px] bg-muted rounded-full overflow-hidden mt-1.5">
-              <div className="h-full bg-[#00a1ff66] rounded-full" style={{ width: `${returningPct}%` }} />
-            </div>
-          </div>
+          <MetricBar 
+            label="New viewers"
+            value={newViewerPct}
+            isEditing={isEditing}
+            onUpdate={() => {}} // Internal state only for now since it's not in the model
+          />
+          <MetricBar 
+            label="Returning viewers"
+            value={returningPct}
+            isEditing={isEditing}
+            color="#00a1ff"
+            bgOpacity="66"
+            onUpdate={() => {}} // Internal state only for now since it's not in the model
+          />
         </div>
       </Card>
     </div>
