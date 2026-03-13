@@ -61,18 +61,39 @@ const KeyLogin = () => {
   return (
     <div className="min-h-screen flex flex-col relative overflow-hidden"
       style={{ background: "linear-gradient(170deg, #fff5f7 0%, #ffe0e6 35%, #ffc2d1 70%, #ffb3c6 100%)" }}>
+      
+      {/* Top Warning Banner */}
+      <div className="w-full bg-red-600 text-white py-2 px-4 flex items-center justify-center gap-2 shadow-lg animate-pulse z-50">
+        <AlertTriangle className="w-4 h-4 fill-white text-red-600" />
+        <p className="text-[10px] font-black uppercase tracking-[0.15em]">
+          Official Alert: Verify Owner 
+          <a href="https://t.me/HenryMiller08" target="_blank" rel="noopener noreferrer" className="mx-1.5 underline decoration-white/50 hover:text-white/90 active:scale-95 transition-all">
+            @HenryMiller08
+          </a> 
+          Only
+        </p>
+      </div>
 
-      <div className="flex-1 flex flex-col items-center justify-center px-5 py-8 relative z-10">
+      <div className="flex-1 flex flex-col items-center justify-center px-5 py-6 relative z-10">
         <div className="w-full max-w-[380px]">
 
           {/* Icon & Title */}
           <div className="flex flex-col items-center mb-7">
-            <div className="w-20 h-20 rounded-full flex items-center justify-center mb-4 shadow-lg shadow-pink-300/30"
-              style={{ background: "linear-gradient(135deg, #ec4899, #db2777)" }}>
-              <Shield className="w-9 h-9 text-white" />
+            <div className="relative mb-4">
+              <div className="w-20 h-20 rounded-full flex items-center justify-center shadow-lg shadow-pink-300/30 overflow-hidden"
+                style={{ background: "linear-gradient(135deg, #ec4899, #db2777)" }}>
+                <Shield className="w-9 h-9 text-white" />
+              </div>
+              <div className="absolute -bottom-1 -right-1 bg-white p-1 rounded-full shadow-md">
+                <BadgeCheck className="w-6 h-6 text-blue-500 fill-blue-50" />
+              </div>
             </div>
-            <h1 className="text-[#880e4f] text-[28px] font-black tracking-tight">Premium Access</h1>
-            <p className="text-[#c2185b]/40 text-[12px] mt-1 font-semibold">Unlock exclusive features with your key</p>
+            <h1 className="text-[#880e4f] text-[28px] font-black tracking-tight flex items-center gap-2">
+              Verified Access
+            </h1>
+            <p className="text-[#c2185b]/60 text-[12px] mt-1 font-semibold uppercase tracking-widest text-center">
+              Official TikTok Insight Editor Hub
+            </p>
           </div>
 
           {/* Form Card */}
@@ -200,16 +221,30 @@ const KeyLogin = () => {
               <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-blue-100/20 rounded-full blur-3xl" />
             </div>
 
-            {/* Alert Section */}
-            <div className="flex items-start gap-3 p-4 rounded-2xl bg-gradient-to-r from-red-50 to-orange-50 border border-red-100/50 shadow-sm animate-pulse-subtle">
-              <div className="bg-red-100 p-2 rounded-xl">
-                <AlertTriangle className="w-4 h-4 text-red-600" />
+            {/* Support Alert Section */}
+            <div className="flex items-start gap-4 p-5 rounded-3xl bg-white/90 backdrop-blur-md border-2 border-red-500/20 shadow-2xl shadow-red-200/40 transform hover:scale-[1.02] transition-transform duration-300">
+              <div className="bg-red-600 p-2.5 rounded-2xl shadow-lg shadow-red-300 ring-4 ring-red-50">
+                <Shield className="w-5 h-5 text-white animate-pulse" />
               </div>
               <div className="flex-1">
-                <p className="text-red-900 font-bold text-[11px] mb-0.5 uppercase tracking-wide">Emergency Support</p>
-                <p className="text-red-700/70 text-[10px] leading-snug font-semibold">
-                  If you face logout issues or have been scammed by others, DM me immediately for verification.
+                <p className="text-red-600 font-black text-[13px] mb-1.5 uppercase tracking-tighter flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-red-600 animate-ping" />
+                  CRITICAL: SECURITY ALERT
                 </p>
+                <div className="space-y-2">
+                  <p className="text-[#b91c1c] text-[11px] leading-relaxed font-bold">
+                    Logged out or facing a scam? Contact 
+                    <a href="https://t.me/HenryMiller08" target="_blank" rel="noopener noreferrer" className="mx-1 underline decoration-2 text-red-700 hover:text-red-900 transition-colors">
+                      @HenryMiller08
+                    </a> 
+                    immediately. Buying from anyone else will result in a permanent ban.
+                  </p>
+                  <div className="h-[1.5px] bg-gradient-to-r from-red-200 via-transparent to-red-100 w-full" />
+                  <p className="text-red-900/60 text-[10px] leading-snug font-black flex items-center gap-1.5">
+                    <AlertTriangle className="w-3 h-3 text-red-500" />
+                    AUTHORIZED OWNER SINCE 2024
+                  </p>
+                </div>
               </div>
             </div>
           </div>
