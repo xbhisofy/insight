@@ -1,73 +1,50 @@
-# Welcome to your Lovable project
+# TikTok Insight UI & Analytics Mockup (Educational Project)
 
-## Project info
+## ⚠️ Important Disclaimer ⚠️
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+**This project is for Educational and UI/UX Research purposes only.**
 
-## How can I edit this code?
+- **NOT FOR COMMERCIAL USE**: This application is a front-end simulation and cannot be used to manipulate real-time data or influence any social media platform's legitimate services.
+- **NO DECEPTIVE USE**: This project must NOT be used for phishing, fraud, or any deceptive practices. Using this code to misrepresent data or impersonate official services is strictly prohibited.
+- **NOT AFFILIATED**: This project is independent and is **NOT affiliated, associated, authorized, endorsed by, or in any way officially connected** with TikTok, ByteDance, or any of its subsidiaries or affiliates.
+- **CODE OF CONDUCT**: Users are expected to use this code ethically. The developer is not responsible for any misuse of this software by third parties.
 
-There are several ways of editing your application.
+---
 
-**Use Lovable**
+## 🔬 Project Overview
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+This repository demonstrates high-fidelity UI/UX replication of modern social media analytics dashboards. The primary goal is to study:
+1.  **Complex Layout Management**: Handling dense data displays and interactive charts in a responsive environment.
+2.  **State Management**: Simulating complex data flows using React and TypeScript.
+3.  **Modern Styling**: Implementing pixel-perfect designs with Tailwind CSS and Shadcn UI.
+4.  **Interactive Visualizations**: Creating high-fidelity SVG/Canvas based charts for data representation.
 
-Changes made via Lovable will be committed automatically to this repo.
+## 🛠️ Technical Stack
 
-**Use your preferred IDE**
+- **Framework**: [React](https://reactjs.org/)
+- **Build Tool**: [Vite](https://vitejs.dev/)
+- **Language**: [TypeScript](https://www.typescriptlang.org/)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+- **UI Components**: [Shadcn/UI](https://ui.shadcn.com/)
+- **State/Data Management**: Simulated patterns for research.
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+## 🚀 Getting Started
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+To run this project locally for educational research:
 
-Follow these steps:
+1.  **Clone the repository**:
+    ```bash
+    git clone https://github.com/xbhisofy/insight.git
+    ```
+2.  **Install dependencies**:
+    ```bash
+    npm install
+    ```
+3.  **Run development server**:
+    ```bash
+    npm run dev
+    ```
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+## 📜 License
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
-
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+This project is licensed for personal educational use. By downloading or cloning this repository, you agree to use it only for learning and research purposes in accordance with local laws and platform TOS.
