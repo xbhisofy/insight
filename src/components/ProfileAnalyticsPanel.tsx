@@ -1,5 +1,24 @@
 import React, { useState, useRef, useEffect } from "react";
-import { ArrowLeft, Info, ArrowUp, ArrowDown, ChevronRight, ChevronLeft, X } from "lucide-react";
+import { ArrowLeft, Info, ArrowUp, ArrowDown, ChevronRight, ChevronLeft, X, Upload } from "lucide-react";
+
+const TikTokDots = () => (
+  <div className="tiktok-loader my-4">
+    <div className="tiktok-dot tiktok-dot-cyan" />
+    <div className="tiktok-dot tiktok-dot-red" />
+  </div>
+);
+
+const SkeletonCard = () => (
+  <div className="bg-card rounded-xl p-4 border border-border space-y-3">
+    <div className="h-5 w-32 skeleton" />
+    <div className="h-3 w-48 skeleton opacity-60" />
+    <div className="grid grid-cols-2 gap-2 mt-4">
+      <div className="h-24 skeleton rounded-2xl" />
+      <div className="h-24 skeleton rounded-2xl" />
+    </div>
+    <div className="h-40 skeleton mt-4 w-full" />
+  </div>
+);
 
 interface ProfileAnalyticsPanelProps {
   onClose: () => void;
@@ -120,7 +139,26 @@ export default function ProfileAnalyticsPanel({ onClose }: ProfileAnalyticsPanel
 
   // Global Edit Mode
   const [isEditing, setIsEditing] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const handleTabChange = (tab: string) => {
+    if (tab === activeTab) return;
+    setIsLoading(true);
+    setTimeout(() => {
+      setActiveTab(tab);
+      setIsLoading(false);
+    }, 450);
+  };
+
+  const handleFilterChange = (f: string) => {
+    if (f === timeFilter) return;
+    setIsLoading(true);
+    setTimeout(() => {
+      setTimeFilter(f);
+      setIsLoading(false);
+    }, 350);
+  };
 
   const triggerLoading = () => {
     // Disabled to prevent unwanted refresh behavior
@@ -157,80 +195,85 @@ export default function ProfileAnalyticsPanel({ onClose }: ProfileAnalyticsPanel
         </div>
 
         {/* Tabs */}
-        <div className="flex w-full overflow-x-auto scrollbar-hide px-3 py-1 gap-6 border-b border-border bg-background">
-          <div className="relative flex whitespace-nowrap px-1 gap-6">
-            <TabBtn label="Inspiration" active={activeTab === "inspiration"} onClick={() => { setActiveTab("inspiration"); }} isEditing={isEditing} />
-            <TabBtn label="Overview" active={activeTab === "overview"} onClick={() => { setActiveTab("overview"); }} isEditing={isEditing} />
-            <TabBtn label="Content" active={activeTab === "content"} onClick={() => { setActiveTab("content"); }} isEditing={isEditing} />
-            <TabBtn label="Viewers" active={activeTab === "viewers"} onClick={() => { setActiveTab("viewers"); }} isEditing={isEditing} />
-            <TabBtn label="Followers" active={activeTab === "followers"} onClick={() => { setActiveTab("followers"); }} isEditing={isEditing} />
+        <div className="relative w-full overflow-hidden tab-shadow-right border-b border-border bg-background">
+          <div className="flex w-full overflow-x-auto scrollbar-hide px-3 py-1 gap-6">
+            <div className="relative flex whitespace-nowrap px-1 gap-6">
+              <TabBtn label="Inspiration" active={activeTab === "inspiration"} onClick={() => handleTabChange("inspiration")} isEditing={isEditing} />
+              <TabBtn label="Overview" active={activeTab === "overview"} onClick={() => handleTabChange("overview")} isEditing={isEditing} />
+              <TabBtn label="Content" active={activeTab === "content"} onClick={() => handleTabChange("content")} isEditing={isEditing} />
+              <TabBtn label="Viewers" active={activeTab === "viewers"} onClick={() => handleTabChange("viewers")} isEditing={isEditing} />
+              <TabBtn label="Followers" active={activeTab === "followers"} onClick={() => handleTabChange("followers")} isEditing={isEditing} />
+            </div>
           </div>
         </div>
 
         {/* Filters */}
-        <div className="flex w-full overflow-x-auto scrollbar-hide px-4 py-3 gap-2 bg-background">
-          {["7 days", "28 days", "60 days", "365 days", "Custom"].map(f => (
-            <button
-              key={f}
-              onClick={() => {
-                if (timeFilter !== f) {
-                  setTimeFilter(f);
-                }
-              }}
-              className={`whitespace-nowrap px-[18px] py-[6px] rounded-full text-[14px] font-black transition-colors ${timeFilter === f ? "bg-foreground text-background" : "bg-muted text-foreground hover:bg-muted/80"
-                }`}
-            >
-              <EditableVal val={f} isEditing={isEditing} />
-            </button>
-          ))}
+        <div className="relative w-full overflow-hidden tab-shadow-right bg-background">
+          <div className="flex w-full overflow-x-auto scrollbar-hide px-4 py-3 gap-2">
+            {["7 days", "28 days", "60 days", "365 days", "Custom"].map(f => (
+              <button
+                key={f}
+                onClick={() => handleFilterChange(f)}
+                className={`whitespace-nowrap px-[18px] py-[6px] rounded-full text-[14px] font-black transition-colors ${timeFilter === f ? "bg-foreground text-background" : "bg-muted text-foreground hover:bg-muted/80"
+                  }`}
+              >
+                <EditableVal val={f} isEditing={isEditing} />
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
-        <div className="p-3 pb-20 relative min-h-[500px]"
-          onPointerDown={handlePointerDown}
-          onPointerUp={handlePointerUp}
-          onPointerLeave={handlePointerUp}
-          onContextMenu={e => e.preventDefault()}
-        >
-          <div>
-            {activeTab === "overview" && (
-              <OverviewContent
-                isEditing={isEditing}
-                data={getFilterData(timeFilter).overview}
-                onUpdate={(d) => updateFilterData("overview", d)}
-              />
-            )}
-            {activeTab === "viewers" && (
-              <ViewersContent
-                isEditing={isEditing}
-                data={getFilterData(timeFilter).viewers}
-                onUpdate={(d) => updateFilterData("viewers", d)}
-                onSeeMore={() => setShowLocationsDetail(true)}
-              />
-            )}
-            {activeTab === "inspiration" && (
-              <InspirationContent
-                isEditing={isEditing}
-                data={getFilterData(timeFilter).inspiration}
-                onUpdate={(d) => updateFilterData("inspiration", d)}
-              />
-            )}
-            {activeTab === "content" && (
-              <ContentTabContent
-                isEditing={isEditing}
-                data={getFilterData(timeFilter).content}
-                onUpdate={(d) => updateFilterData("content", d)}
-              />
-            )}
-            {activeTab === "followers" && (
-              <FollowersContent
-                isEditing={isEditing}
-                data={getFilterData(timeFilter).followers}
-                onUpdate={(d) => updateFilterData("followers", d)}
-              />
-            )}
+      <div className="p-3 pb-20">
+        {isLoading && (
+          <div className="loading-full-screen">
+            <TikTokDots />
+            <div className="w-full space-y-4 px-6 mt-16 max-w-lg">
+              <SkeletonCard />
+              <SkeletonCard />
+            </div>
           </div>
+        )}
+
+        <div className={isLoading ? "opacity-0 invisible" : "opacity-100 visible transition-opacity duration-300"}>
+          {activeTab === "overview" && (
+            <OverviewContent
+              isEditing={isEditing}
+              data={getFilterData(timeFilter).overview}
+              onUpdate={(d) => updateFilterData("overview", d)}
+            />
+          )}
+          {activeTab === "viewers" && (
+            <ViewersContent
+              isEditing={isEditing}
+              data={getFilterData(timeFilter).viewers}
+              onUpdate={(d) => updateFilterData("viewers", d)}
+              onSeeMore={() => setShowLocationsDetail(true)}
+            />
+          )}
+          {activeTab === "inspiration" && (
+            <InspirationContent
+              isEditing={isEditing}
+              data={getFilterData(timeFilter).inspiration}
+              onUpdate={(d) => updateFilterData("inspiration", d)}
+            />
+          )}
+          {activeTab === "content" && (
+            <ContentTabContent
+              isEditing={isEditing}
+              data={getFilterData(timeFilter).content}
+              onUpdate={(d) => updateFilterData("content", d)}
+            />
+          )}
+          {activeTab === "followers" && (
+            <FollowersContent
+              isEditing={isEditing}
+              data={getFilterData(timeFilter).followers}
+              onUpdate={(d) => updateFilterData("followers", d)}
+            />
+          )}
         </div>
+      </div>
 
       {/* Locations Detail Overlay */}
       {showLocationsDetail && (
@@ -1133,8 +1176,8 @@ const MetricCard = ({
     <button
       onClick={onClick}
       className={`p-4 rounded-2xl border text-left flex flex-col justify-between min-h-[105px] ${selected
-          ? "bg-[#e9f8ff] border-[#bae5f8] dark:bg-[#00a1ff20] dark:border-[#00a1ff40]"
-          : "border-border bg-card"
+        ? "bg-[#e9f8ff] border-[#bae5f8] dark:bg-[#00a1ff20] dark:border-[#00a1ff40]"
+        : "border-border bg-card"
         }`}
     >
       <span className="text-[13px] text-foreground/60 font-black capitalize tracking-tight">

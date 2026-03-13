@@ -92,23 +92,32 @@
 
   html {
     height: 100%;
-    overscroll-behavior-y: none;
+    height: -webkit-fill-available;
+    overflow: hidden;
+    overscroll-behavior: none;
   }
-
+  
   body {
     @apply bg-background text-foreground font-sans antialiased;
     font-family: 'DM Sans', sans-serif;
     height: 100%;
+    height: -webkit-fill-available;
     margin: 0;
-    position: relative;
-    overflow-y: auto;
-    overflow-x: hidden;
-    overscroll-behavior-y: none;
-    -webkit-overflow-scrolling: touch;
+    padding: 0;
+    overflow: hidden;
+    width: 100%;
     -webkit-tap-highlight-color: transparent;
     -webkit-touch-callout: none;
+    -webkit-overflow-scrolling: touch;
     user-select: none;
-    touch-action: auto;
+  }
+
+  #root {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
   }
 
   #root {
@@ -164,6 +173,103 @@
 
   .insight-gradient {
     background: linear-gradient(135deg, hsl(var(--tiktok-red) / 0.15), hsl(var(--tiktok-cyan) / 0.1));
+  }
+
+  /* TikTok Loading Dots Animation - High Fidelity Refined */
+  .tiktok-loader {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 32px;
+    width: 60px;
+    position: relative;
+    margin: 0 auto;
+  }
+
+  .tiktok-dot {
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    position: absolute;
+    /* Removed blur for crisp original look */
+  }
+
+  .tiktok-dot-cyan {
+    background-color: #00f2ea;
+    animation: tiktok-cyan-move 1s infinite ease-in-out;
+  }
+
+  .tiktok-dot-red {
+    background-color: #ff0050;
+    animation: tiktok-red-move 1s infinite ease-in-out;
+  }
+
+  @keyframes tiktok-cyan-move {
+    0%, 100% { transform: translateX(-10px) scale(1.1); z-index: 2; }
+    50% { transform: translateX(10px) scale(0.9); z-index: 1; opacity: 0.9; }
+  }
+
+  @keyframes tiktok-red-move {
+    0%, 100% { transform: translateX(10px) scale(0.9); z-index: 1; opacity: 0.9; }
+    50% { transform: translateX(-10px) scale(1.1); z-index: 2; }
+  }
+
+  /* Skeleton Screen Styles - Refined */
+  .skeleton {
+    @apply bg-muted/40 dark:bg-zinc-800/60;
+    position: relative;
+    overflow: hidden;
+    border-radius: 6px;
+  }
+
+  .skeleton::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    transform: translateX(-100%);
+    background-image: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.08) 50%,
+      transparent 100%
+    );
+    animation: shimmer 1.8s infinite;
+  }
+
+  .dark .skeleton::after {
+    background-image: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.04) 50%,
+      transparent 100%
+    );
+  }
+
+  @keyframes shimmer {
+    100% { transform: translateX(100%); }
+  }
+
+  .loading-full-screen {
+    @apply fixed inset-0 z-[100] bg-background/80 backdrop-blur-md flex flex-col items-center justify-start pt-[340px];
+  }
+
+  /* Tab Shadow Hint */
+  .tab-shadow-right {
+    position: relative;
+  }
+  .tab-shadow-right::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 40px;
+    background: linear-gradient(to left, hsl(var(--background)), transparent);
+    pointer-events: none;
+    z-index: 5;
   }
 
   @keyframes pulse-subtle {

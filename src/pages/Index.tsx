@@ -142,7 +142,7 @@ const Index = () => {
   const currentInsightsReel = insightsReel ? reels.find((r) => r.id === insightsReel.id) || insightsReel : null;
 
   return (
-    <div className="h-screen bg-background max-w-lg mx-auto relative flex flex-col">
+    <div className="h-[100dvh] bg-background max-w-lg mx-auto relative flex flex-col overflow-hidden">
       {/* Home Feed */}
       {(navTab === "home" || navTab === "friends") && <HomeFeed reels={reels} onSave={handleSave} />}
 
@@ -150,9 +150,9 @@ const Index = () => {
       {navTab === "inbox" && <InboxPage />}
       {/* Profile page */}
       {navTab === "profile" && (
-        <div className="h-full overflow-y-auto scrollbar-hide">
+        <div className="flex-1 overflow-y-auto scrollbar-hide overscroll-contain touch-auto">
           <ProfileHeader reels={reels} activeTab={profileTab} onTabChange={setProfileTab} onSetReels={saveReels} />
-          <div className="pb-14">
+          <div className="pb-24"> {/* Increased padding for bottom nav space */}
             <VideoGrid reels={reels} onReelClick={handleReelClick} onLongPress={handleLongPress} onAddReel={handleAddReel} />
           </div>
         </div>

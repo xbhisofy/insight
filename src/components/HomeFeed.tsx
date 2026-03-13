@@ -48,7 +48,7 @@ const HomeFeed = ({ reels, onSave }: HomeFeedProps) => {
       </div>
 
       {/* Scrollable feed */}
-      <div className="h-full overflow-y-scroll snap-y snap-mandatory scrollbar-hide max-w-lg mx-auto" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+      <div className="h-full overflow-y-auto snap-y snap-mandatory scrollbar-hide max-w-lg mx-auto overscroll-contain touch-auto" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
         {reels.map((reel) => (
           <FeedCard key={reel.id} reel={reel} onLongPress={() => setEditingReel(reel)} />
         ))}

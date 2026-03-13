@@ -2,6 +2,25 @@ import { useState, useRef } from "react";
 import { ArrowLeft, ChevronRight, Settings } from "lucide-react";
 import ProfileAnalyticsPanel from "./ProfileAnalyticsPanel";
 
+const TikTokDots = () => (
+  <div className="tiktok-loader my-4">
+    <div className="tiktok-dot tiktok-dot-cyan" />
+    <div className="tiktok-dot tiktok-dot-red" />
+  </div>
+);
+
+const SkeletonCard = () => (
+  <div className="bg-card rounded-xl p-4 border border-border space-y-3">
+    <div className="h-5 w-32 skeleton" />
+    <div className="h-3 w-48 skeleton opacity-60" />
+    <div className="grid grid-cols-2 gap-2 mt-4">
+      <div className="h-24 skeleton rounded-2xl" />
+      <div className="h-24 skeleton rounded-2xl" />
+    </div>
+    <div className="h-40 skeleton mt-4 w-full" />
+  </div>
+);
+
 interface TikTokStudioPanelProps {
   onClose: () => void;
 }
@@ -9,6 +28,7 @@ interface TikTokStudioPanelProps {
 export default function TikTokStudioPanel({ onClose }: TikTokStudioPanelProps) {
   const [showAnalytics, setShowAnalytics] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const handlePointerDown = () => {
@@ -57,9 +77,23 @@ export default function TikTokStudioPanel({ onClose }: TikTokStudioPanelProps) {
         <div 
           className="bg-card rounded-[14px] p-4 cursor-pointer relative border border-border active:bg-muted/50 transition-colors"
           onClick={() => {
-            if (!isEditing) setShowAnalytics(true);
+            if (!isEditing) {
+              setIsLoading(true);
+              setTimeout(() => {
+                setShowAnalytics(true);
+                setIsLoading(false);
+              }, 450);
+            }
           }}
         >
+          {isLoading && (
+            <div className="loading-full-screen">
+              <TikTokDots />
+              <div className="w-full space-y-4 px-8 mt-16 max-w-lg">
+                <SkeletonCard />
+              </div>
+            </div>
+          )}
           <div className="flex justify-between items-center mb-5">
             <h2 className="text-[17.5px] font-bold"><EditableVal val="Analytics" isEditing={isEditing} /></h2>
             <ChevronRight className="w-5.5 h-5.5 text-muted-foreground/30" />

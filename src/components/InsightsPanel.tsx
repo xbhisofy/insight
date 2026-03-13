@@ -11,12 +11,32 @@ interface InsightsPanelProps {
 type TabName = "inspiration" | "overview" | "viewers" | "engagement";
 type EditSection = null | "quickStats" | "keyMetrics" | "graph" | "traffic" | "viewerTypes" | "gender" | "age" | "locations" | "thumbnail" | "tab_overview" | "tab_viewers" | "tab_engagement" | "tab_inspiration";
 
+const TikTokDots = () => (
+  <div className="tiktok-loader my-4">
+    <div className="tiktok-dot tiktok-dot-cyan" />
+    <div className="tiktok-dot tiktok-dot-red" />
+  </div>
+);
+
+const SkeletonCard = () => (
+  <div className="mx-4 mt-2.5 p-4 bg-muted/20 rounded-xl space-y-3">
+    <div className="h-5 w-32 skeleton" />
+    <div className="h-3 w-48 skeleton opacity-60" />
+    <div className="grid grid-cols-2 gap-2 mt-4">
+      <div className="h-24 skeleton rounded-2xl" />
+      <div className="h-24 skeleton rounded-2xl" />
+    </div>
+    <div className="h-40 skeleton mt-4 w-full" />
+  </div>
+);
+
 const InsightsPanel = ({ reel, onClose, onSave }: InsightsPanelProps) => {
   const [localReel, setLocalReel] = useState<ReelData>(reel);
   const ins = localReel.insights;
   const [activeTab, setActiveTab] = useState<TabName>("overview");
   const [isEditing, setIsEditing] = useState(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const triggerEditMode = () => {
     setIsEditing(prev => !prev);
@@ -46,9 +66,19 @@ const InsightsPanel = ({ reel, onClose, onSave }: InsightsPanelProps) => {
     onSave?.(next);
   };
 
+  const handleTabChange = (tab: TabName) => {
+    if (tab === activeTab) return;
+    setIsLoading(true);
+    // Mimic TikTok timing
+    setTimeout(() => {
+      setActiveTab(tab);
+      setIsLoading(false);
+    }, 450); 
+  };
+
   return (
     <div 
-      className="fixed inset-0 z-[60] bg-background overflow-y-auto scroll-smooth text-foreground"
+      className="fixed inset-0 z-[60] bg-background overflow-y-auto scroll-smooth text-foreground overscroll-contain touch-auto"
       onPointerDown={handlePointerDown}
       onPointerUp={handlePointerUp}
       onPointerLeave={handlePointerUp}
@@ -106,7 +136,6 @@ const InsightsPanel = ({ reel, onClose, onSave }: InsightsPanelProps) => {
                   <EditableVal val={localReel.duration} isEditing={isEditing} />
                 </span>
               </div>
-                <ImageIcon className="w-3 h-3 text-white" />
             </>
           )}
         </div>
@@ -128,20 +157,34 @@ const InsightsPanel = ({ reel, onClose, onSave }: InsightsPanelProps) => {
         </div>
 
         {/* Tabs */}
-        <div className="flex w-full border-b border-border scrollbar-hide overflow-x-auto px-4">
-          <TabBtn label="Inspiration" active={activeTab === "inspiration"} onClick={() => setActiveTab("inspiration")} isEditing={isEditing} />
-          <TabBtn label="Overview" active={activeTab === "overview"} onClick={() => setActiveTab("overview")} isEditing={isEditing} />
-          <TabBtn label="Viewers" active={activeTab === "viewers"} onClick={() => setActiveTab("viewers")} isEditing={isEditing} />
-          <TabBtn label="Engagement" active={activeTab === "engagement"} onClick={() => setActiveTab("engagement")} isEditing={isEditing} />
+        <div className="relative w-full border-b border-border overflow-hidden tab-shadow-right bg-background">
+          <div className="flex w-full scrollbar-hide overflow-x-auto px-4">
+            <TabBtn label="Inspiration" active={activeTab === "inspiration"} onClick={() => handleTabChange("inspiration")} isEditing={isEditing} />
+            <TabBtn label="Overview" active={activeTab === "overview"} onClick={() => handleTabChange("overview")} isEditing={isEditing} />
+            <TabBtn label="Viewers" active={activeTab === "viewers"} onClick={() => handleTabChange("viewers")} isEditing={isEditing} />
+            <TabBtn label="Engagement" active={activeTab === "engagement"} onClick={() => handleTabChange("engagement")} isEditing={isEditing} />
+          </div>
         </div>
       </div>
 
       {/* Tab content */}
       <div className="pb-20">
-        {activeTab === "overview" && <OverviewTab ins={ins} reel={localReel} isEditing={isEditing} onUpdate={updateInsights} />}
-        {activeTab === "viewers" && <ViewersTab ins={ins} isEditing={isEditing} onUpdate={updateInsights} />}
-        {activeTab === "engagement" && <EngagementTab ins={ins} reel={localReel} isEditing={isEditing} />}
-        {activeTab === "inspiration" && <InspirationTab ins={ins} isEditing={isEditing} />}
+        {isLoading && (
+          <div className="loading-full-screen">
+            <TikTokDots />
+            <div className="w-full space-y-4 px-6 mt-16 max-w-lg">
+              <SkeletonCard />
+              <SkeletonCard />
+            </div>
+          </div>
+        )}
+        
+        <div className={isLoading ? "opacity-0 invisible" : "opacity-100 visible transition-opacity duration-300"}>
+          {activeTab === "overview" && <OverviewTab ins={ins} reel={localReel} isEditing={isEditing} onUpdate={updateInsights} />}
+          {activeTab === "viewers" && <ViewersTab ins={ins} isEditing={isEditing} onUpdate={updateInsights} />}
+          {activeTab === "engagement" && <EngagementTab ins={ins} reel={localReel} isEditing={isEditing} />}
+          {activeTab === "inspiration" && <InspirationTab ins={ins} isEditing={isEditing} />}
+        </div>
       </div>
     </div>
   );
