@@ -7,7 +7,6 @@ interface ProfileAnalyticsPanelProps {
 
 export default function ProfileAnalyticsPanel({ onClose }: ProfileAnalyticsPanelProps) {
   const [activeTab, setActiveTab] = useState("overview");
-  const [loadingState, setLoadingState] = useState<"none" | "skeleton" | "dots">("none");
   const [timeFilter, setTimeFilter] = useState("7 days");
 
   // Per-filter Data Persistence
@@ -124,13 +123,7 @@ export default function ProfileAnalyticsPanel({ onClose }: ProfileAnalyticsPanel
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const triggerLoading = () => {
-    setLoadingState("skeleton");
-    setTimeout(() => {
-      setLoadingState("dots");
-      setTimeout(() => {
-        setLoadingState("none");
-      }, 400);
-    }, 500);
+    // Disabled to prevent unwanted refresh behavior
   };
 
   const handlePointerDown = () => {
@@ -148,7 +141,7 @@ export default function ProfileAnalyticsPanel({ onClose }: ProfileAnalyticsPanel
   };
 
   return (
-    <div className="fixed inset-0 z-[60] bg-background overflow-y-auto scrollbar-hide text-foreground select-none">
+    <div className="fixed inset-0 z-[60] bg-background overflow-y-auto scroll-smooth text-foreground">
       {/* Header */}
       <div className="sticky top-0 bg-background z-20 border-b border-border">
         <div className="flex items-center justify-between h-[52px] px-4">
@@ -166,11 +159,11 @@ export default function ProfileAnalyticsPanel({ onClose }: ProfileAnalyticsPanel
         {/* Tabs */}
         <div className="flex w-full overflow-x-auto scrollbar-hide px-3 py-1 gap-6 border-b border-border bg-background">
           <div className="relative flex whitespace-nowrap px-1 gap-6">
-            <TabBtn label="Inspiration" active={activeTab === "inspiration"} onClick={() => { setActiveTab("inspiration"); triggerLoading(); }} isEditing={isEditing} />
-            <TabBtn label="Overview" active={activeTab === "overview"} onClick={() => { setActiveTab("overview"); triggerLoading(); }} isEditing={isEditing} />
-            <TabBtn label="Content" active={activeTab === "content"} onClick={() => { setActiveTab("content"); triggerLoading(); }} isEditing={isEditing} />
-            <TabBtn label="Viewers" active={activeTab === "viewers"} onClick={() => { setActiveTab("viewers"); triggerLoading(); }} isEditing={isEditing} />
-            <TabBtn label="Followers" active={activeTab === "followers"} onClick={() => { setActiveTab("followers"); triggerLoading(); }} isEditing={isEditing} />
+            <TabBtn label="Inspiration" active={activeTab === "inspiration"} onClick={() => { setActiveTab("inspiration"); }} isEditing={isEditing} />
+            <TabBtn label="Overview" active={activeTab === "overview"} onClick={() => { setActiveTab("overview"); }} isEditing={isEditing} />
+            <TabBtn label="Content" active={activeTab === "content"} onClick={() => { setActiveTab("content"); }} isEditing={isEditing} />
+            <TabBtn label="Viewers" active={activeTab === "viewers"} onClick={() => { setActiveTab("viewers"); }} isEditing={isEditing} />
+            <TabBtn label="Followers" active={activeTab === "followers"} onClick={() => { setActiveTab("followers"); }} isEditing={isEditing} />
           </div>
         </div>
 
@@ -182,7 +175,6 @@ export default function ProfileAnalyticsPanel({ onClose }: ProfileAnalyticsPanel
               onClick={() => {
                 if (timeFilter !== f) {
                   setTimeFilter(f);
-                  triggerLoading();
                 }
               }}
               className={`whitespace-nowrap px-[18px] py-[6px] rounded-full text-[14px] font-black transition-colors ${timeFilter === f ? "bg-foreground text-background" : "bg-muted text-foreground hover:bg-muted/80"
@@ -194,26 +186,12 @@ export default function ProfileAnalyticsPanel({ onClose }: ProfileAnalyticsPanel
         </div>
       </div>
 
-      <div
-        className="p-3 pb-20 relative min-h-[500px]"
-        onPointerDown={handlePointerDown}
-        onPointerUp={handlePointerUp}
-        onPointerLeave={handlePointerUp}
-        onContextMenu={e => e.preventDefault()}
-      >
-        {loadingState === "skeleton" && (
-          <div className="absolute inset-0 z-50 animate-in fade-in duration-200">
-            <SkeletonLoader />
-          </div>
-        )}
-
-        {loadingState === "dots" && (
-          <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/10 backdrop-blur-[1px] mt-20 animate-in fade-in duration-200">
-            <TikTokLoader />
-          </div>
-        )}
-
-        {loadingState === "none" && (
+        <div className="p-3 pb-20 relative min-h-[500px]"
+          onPointerDown={handlePointerDown}
+          onPointerUp={handlePointerUp}
+          onPointerLeave={handlePointerUp}
+          onContextMenu={e => e.preventDefault()}
+        >
           <div>
             {activeTab === "overview" && (
               <OverviewContent
@@ -252,8 +230,7 @@ export default function ProfileAnalyticsPanel({ onClose }: ProfileAnalyticsPanel
               />
             )}
           </div>
-        )}
-      </div>
+        </div>
 
       {/* Locations Detail Overlay */}
       {showLocationsDetail && (
@@ -951,54 +928,6 @@ const FollowersContent = ({ isEditing, data, onUpdate }: { isEditing: boolean, d
 // HELPER COMPONENTS
 // -----------------------------------------------------
 
-const TikTokLoader = () => (
-  <div className="flex items-center justify-center gap-0 relative w-12 h-12 scale-[1.2]">
-    <div className="w-4 h-4 rounded-full bg-[#fe2c55] animate-tiktok-loader-left" />
-    <div className="w-4 h-4 rounded-full bg-[#25f4ee] animate-tiktok-loader-right -ml-4" />
-    <style>{`
-      @keyframes tiktok-loader-left {
-        0%, 100% { transform: translateX(0) scale(1.1); z-index: 10; }
-        25% { transform: translateX(10px) scale(0.9); z-index: 0; }
-        50% { transform: translateX(20px) scale(1.1); z-index: 10; }
-        75% { transform: translateX(10px) scale(1.3); z-index: 20; }
-      }
-      @keyframes tiktok-loader-right {
-        0%, 100% { transform: translateX(20px) scale(1.1); z-index: 10; }
-        25% { transform: translateX(10px) scale(1.3); z-index: 20; }
-        50% { transform: translateX(0) scale(1.1); z-index: 10; }
-        75% { transform: translateX(10px) scale(0.9); z-index: 0; }
-      }
-      .animate-tiktok-loader-left {
-        animation: tiktok-loader-left 0.8s ease-in-out infinite;
-      }
-      .animate-tiktok-loader-right {
-        animation: tiktok-loader-right 0.8s ease-in-out infinite;
-      }
-      @keyframes pulse {
-        0%, 100% { opacity: 0.5; }
-        50% { opacity: 0.8; }
-      }
-      .animate-pulse-slow {
-        animation: pulse 1.5s ease-in-out infinite;
-      }
-    `}</style>
-  </div>
-);
-
-const SkeletonLoader = () => (
-  <div className="space-y-[14px] p-1">
-    <div className="h-10 bg-muted rounded-lg animate-pulse-slow w-full" />
-    <div className="bg-card rounded-xl border border-border p-4 space-y-4">
-      <div className="h-6 bg-muted rounded animate-pulse-slow w-1/3" />
-      <div className="grid grid-cols-2 gap-3">
-        {[1, 2, 3, 4, 5, 6].map(i => (
-          <div key={i} className="h-20 bg-muted rounded-xl animate-pulse-slow" />
-        ))}
-      </div>
-    </div>
-    <div className="h-[200px] bg-card border border-border rounded-xl animate-pulse-slow w-full" />
-  </div>
-);
 
 const HalfDonutChart = ({ segments }: { segments: { value: number, color: string }[] }) => {
   const radius = 80;
@@ -1103,10 +1032,10 @@ const DrawablePolygonGraph = ({ data, onDataChange, maxVal, isEditing, gradientI
   };
 
   return (
-    <div className="absolute inset-0 w-[calc(100%-32px)] h-full overflow-visible">
+    <div className="absolute inset-0 w-[calc(100%-32px)] h-full overflow-hidden">
       <svg
         ref={svgRef}
-        className={`absolute inset-0 w-full h-full overflow-visible ${isEditing ? "touch-none cursor-crosshair" : ""}`}
+        className={`absolute inset-0 w-full h-full overflow-visible ${isEditing ? "touch-none cursor-crosshair" : "pointer-events-none"}`}
         viewBox="0 0 300 100"
         preserveAspectRatio="none"
         onPointerDown={e => {

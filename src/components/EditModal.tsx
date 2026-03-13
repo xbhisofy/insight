@@ -98,7 +98,6 @@ const EditModal = ({ reel, onSave, onClose }: EditModalProps) => {
             >
               {uploading ? (
                 <>
-                  <Loader2 className="w-4 h-4 animate-spin" />
                   Processing... {progress}%
                 </>
               ) : (
@@ -128,12 +127,12 @@ const EditModal = ({ reel, onSave, onClose }: EditModalProps) => {
             </div>
             <div className="flex flex-col gap-2">
               <label className={`flex items-center gap-1.5 text-[hsl(var(--tiktok-cyan))] text-[13px] font-semibold cursor-pointer ${uploading ? "opacity-50 pointer-events-none" : ""}`}>
-                {uploading === "thumbnail" ? <Loader2 className="w-4 h-4 animate-spin" /> : <Image className="w-4 h-4" />}
+                {uploading === "thumbnail" ? null : <Image className="w-4 h-4" />}
                 Change Thumbnail
                 <input type="file" accept="image/*" onChange={handleThumbnailUpload} className="hidden" />
               </label>
               <label className={`flex items-center gap-1.5 text-primary text-[13px] font-semibold cursor-pointer ${uploading ? "opacity-50 pointer-events-none" : ""}`}>
-                {uploading === "video" ? <Loader2 className="w-4 h-4 animate-spin" /> : <Film className="w-4 h-4" />}
+                {uploading === "video" ? null : <Film className="w-4 h-4" />}
                 {videoUrl ? "Change Video" : "Upload Video"}
                 <input type="file" accept="video/*" onChange={handleVideoUpload} className="hidden" />
               </label>

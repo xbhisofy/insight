@@ -7,7 +7,6 @@ import EditModal from "@/components/EditModal";
 import InsightsPanel from "@/components/InsightsPanel";
 import BottomNav from "@/components/BottomNav";
 import HomeFeed from "@/components/HomeFeed";
-import PullToRefresh from "@/components/PullToRefresh";
 import InboxPage from "@/components/InboxPage";
 
 const Index = () => {
@@ -37,11 +36,14 @@ const Index = () => {
   // Browser back: close overlays first, then navigate tabs, then exit
   useEffect(() => {
     // Restore theme from localStorage
-    const savedTheme = localStorage.getItem("theme");
+    const savedTheme = localStorage.getItem("theme") || "dark";
     if (savedTheme === "dark") {
       document.documentElement.classList.add("dark");
-    } else if (savedTheme === "light") {
+    } else {
       document.documentElement.classList.remove("dark");
+    }
+    if (!localStorage.getItem("theme")) {
+      localStorage.setItem("theme", "dark");
     }
     
     // Ensure history is initialized
@@ -71,9 +73,6 @@ const Index = () => {
     localStorage.setItem("user_reels", JSON.stringify(newReels));
   }, []);
 
-  const handleRefresh = useCallback(async () => {
-    await new Promise((r) => setTimeout(r, 800));
-  }, []);
 
   const handleReelClick = useCallback((reel: ReelData) => {
     setSelectedReel(reel);
@@ -151,12 +150,12 @@ const Index = () => {
       {navTab === "inbox" && <InboxPage />}
       {/* Profile page */}
       {navTab === "profile" && (
-        <PullToRefresh onRefresh={handleRefresh}>
+        <div className="h-full overflow-y-auto scrollbar-hide">
           <ProfileHeader reels={reels} activeTab={profileTab} onTabChange={setProfileTab} onSetReels={saveReels} />
           <div className="pb-14">
             <VideoGrid reels={reels} onReelClick={handleReelClick} onLongPress={handleLongPress} onAddReel={handleAddReel} />
           </div>
-        </PullToRefresh>
+        </div>
       )}
 
       {/* Bottom Nav */}

@@ -258,11 +258,11 @@ const ReelEditSheet = ({ reel, onSave, onClose }: { reel: ReelData; onSave: (r: 
             </div>
             <div className="flex flex-col gap-2">
               <label className={`flex items-center gap-1.5 text-[hsl(var(--tiktok-cyan))] text-[13px] font-semibold cursor-pointer ${uploading ? "opacity-50 pointer-events-none" : ""}`}>
-                {uploading === "thumbnail" ? <Loader2 className="w-4 h-4 animate-spin" /> : <span>📷</span>} Change Thumbnail
+                <span>📷</span> Change Thumbnail
                 <input type="file" accept="image/*" onChange={handleThumbnailChange} className="hidden" />
               </label>
               <label className={`flex items-center gap-1.5 text-primary text-[13px] font-semibold cursor-pointer ${uploading ? "opacity-50 pointer-events-none" : ""}`}>
-                {uploading === "video" ? <Loader2 className="w-4 h-4 animate-spin" /> : <span>🎬</span>} {videoUrl ? "Change Video" : "Upload Video"}
+                <span>🎬</span> {videoUrl ? "Change Video" : "Upload Video"}
                 <input type="file" accept="video/*" onChange={handleVideoChange} className="hidden" />
               </label>
             </div>

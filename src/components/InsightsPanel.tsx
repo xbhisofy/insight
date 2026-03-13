@@ -48,7 +48,7 @@ const InsightsPanel = ({ reel, onClose, onSave }: InsightsPanelProps) => {
 
   return (
     <div 
-      className="fixed inset-0 z-[60] bg-background overflow-y-auto scrollbar-hide text-foreground select-none"
+      className="fixed inset-0 z-[60] bg-background overflow-y-auto scroll-smooth text-foreground"
       onPointerDown={handlePointerDown}
       onPointerUp={handlePointerUp}
       onPointerLeave={handlePointerUp}

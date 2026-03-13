@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import {
-  ArrowLeft, RefreshCw, Lock, LogOut, Plus, Search, Copy, Trash2, XCircle, RotateCcw, Key
+  ArrowLeft, Lock, LogOut, Plus, Search, Copy, Trash2, XCircle, Key
 } from "lucide-react";
 import { format } from "date-fns";
 import type { Tables } from "@/integrations/supabase/types";
@@ -199,9 +199,6 @@ const AdminPanel = () => {
           <h1 className="text-lg font-bold text-foreground">Admin Panel</h1>
         </div>
         <div className="flex items-center gap-2">
-          <button onClick={fetchKeys} className="text-muted-foreground p-2">
-            <RefreshCw className="w-5 h-5" />
-          </button>
           <button onClick={() => setShowPasswordModal(true)} className="text-muted-foreground p-2" title="Change Password">
             <Lock className="w-5 h-5" />
           </button>
@@ -336,16 +333,6 @@ const AdminPanel = () => {
                         className="text-xs h-7"
                       >
                         <XCircle className="w-3 h-3 mr-1" /> Revoke
-                      </Button>
-                    )}
-                    {key.device_id && (
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => resetDevice(key.id)}
-                        className="text-xs h-7"
-                      >
-                        <RotateCcw className="w-3 h-3 mr-1" /> Reset Device
                       </Button>
                     )}
                     <Button

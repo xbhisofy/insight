@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Fingerprint, Timer, Send, Loader2, Sparkles, Lock, Shield } from "lucide-react";
+import { Fingerprint, Timer, Send, Loader2, Sparkles, Lock, Shield, MessageCircle, AlertTriangle, ExternalLink, BadgeCheck } from "lucide-react";
 
 const getDeviceId = (): string => {
   let id = localStorage.getItem("device_id");
@@ -117,7 +117,7 @@ const KeyLogin = () => {
                 }}
               >
                 {loading ? (
-                  <><Loader2 className="w-5 h-5 animate-spin text-[#880e4f]" /> <span className="text-[#880e4f]">Verifying...</span></>
+                  <>Verifying...</>
                 ) : (
                   <><Sparkles className="w-[18px] h-[18px]" /> Activate Key</>
                 )}
@@ -137,24 +137,81 @@ const KeyLogin = () => {
             </div>
           </div>
 
-          {/* Telegram */}
-          <div className="mt-5">
+          {/* Telegram & Support Section */}
+          <div className="mt-6 flex flex-col gap-4">
+            {/* Main Channel Button */}
             <a
-              href="https://t.me/+h5IeaMEfjoAzNTZl"
+              href="https://t.me/whopcampaign"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center gap-3 w-full h-[50px] rounded-2xl font-bold text-[14px] text-white transition-all duration-200 active:scale-[0.98]"
+              className="group flex items-center justify-between gap-3 px-5 w-full h-[54px] rounded-2xl font-bold text-[14px] text-white transition-all duration-300 active:scale-[0.98] border border-white/20"
               style={{
-                background: "linear-gradient(135deg, #0ea5e9, #0284c7)",
-                boxShadow: "0 6px 24px -4px rgba(14,165,233,0.45)"
+                background: "linear-gradient(135deg, #24A1DE 0%, #1c87bc 100%)",
+                boxShadow: "0 10px 25px -5px rgba(36,161,222,0.4)"
               }}
             >
-              <Send className="w-4 h-4" />
-              Join Main Channel — Telegram
+              <div className="flex items-center gap-3">
+                <div className="bg-white/20 p-2 rounded-lg group-hover:bg-white/30 transition-colors">
+                  <Send className="w-4 h-4" />
+                </div>
+                <span>Official Channel</span>
+              </div>
+              <ExternalLink className="w-4 h-4 opacity-50 group-hover:opacity-100 transition-opacity" />
             </a>
-            <p className="text-center text-[11px] text-[#c2185b]/30 mt-3 font-medium">
-              Don't have a key? Join our main Telegram channel
-            </p>
+
+            {/* Owner/Support Card */}
+            <div className="relative p-5 rounded-3xl bg-white/70 backdrop-blur-md border border-white/50 shadow-xl shadow-pink-200/30 overflow-hidden group">
+              {/* Animated background gradient */}
+              <div className="absolute inset-0 bg-gradient-to-br from-pink-50/50 via-transparent to-pink-100/30 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              
+              <div className="relative z-10">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="px-2.5 py-1 rounded-full bg-pink-50 border border-pink-100 flex items-center gap-1.5">
+                    <Shield className="w-3 h-3 text-pink-500" />
+                    <span className="text-[10px] font-bold text-pink-600 uppercase tracking-widest">Official Access</span>
+                  </div>
+                  <BadgeCheck className="w-5 h-5 text-pink-500" />
+                </div>
+
+                <div className="mb-4">
+                  <h3 className="text-[#880e4f] text-[17px] font-black tracking-tight">@HenryMiller08</h3>
+                  <p className="text-[#ad1457]/60 text-[11px] font-semibold mt-0.5">Primary Developer & Owner</p>
+                </div>
+
+                <div className="space-y-3">
+                  <p className="text-[#ad1457]/50 text-[11px] leading-relaxed font-medium">
+                    Verified owner of this TikTok Insight Editor. Anyone else selling this access is a <span className="text-red-500 font-bold underline">SCAMMER</span>. Buy only from official sources.
+                  </p>
+
+                  <a
+                    href="https://t.me/HenryMiller08"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center gap-2.5 w-full h-[48px] rounded-xl bg-[#880e4f] text-white font-bold text-[13px] transition-all hover:bg-[#700b41] hover:shadow-lg hover:shadow-pink-900/20 active:scale-[0.97]"
+                  >
+                    <MessageCircle className="w-[18px] h-[18px]" />
+                    Direct Message Owner
+                  </a>
+                </div>
+              </div>
+
+              {/* Decorative blobs */}
+              <div className="absolute -top-10 -left-10 w-32 h-32 bg-pink-200/20 rounded-full blur-3xl" />
+              <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-blue-100/20 rounded-full blur-3xl" />
+            </div>
+
+            {/* Alert Section */}
+            <div className="flex items-start gap-3 p-4 rounded-2xl bg-gradient-to-r from-red-50 to-orange-50 border border-red-100/50 shadow-sm animate-pulse-subtle">
+              <div className="bg-red-100 p-2 rounded-xl">
+                <AlertTriangle className="w-4 h-4 text-red-600" />
+              </div>
+              <div className="flex-1">
+                <p className="text-red-900 font-bold text-[11px] mb-0.5 uppercase tracking-wide">Emergency Support</p>
+                <p className="text-red-700/70 text-[10px] leading-snug font-semibold">
+                  If you face logout issues or have been scammed by others, DM me immediately for verification.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>

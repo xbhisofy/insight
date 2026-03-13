@@ -139,12 +139,7 @@ const FeedCard = ({ reel, onLongPress }: { reel: ReelData; onLongPress: () => vo
       )}
       <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, transparent 15%, transparent 50%, rgba(0,0,0,0.85) 100%)' }} />
 
-      {/* Long press indicator */}
-      {pressing && (
-        <div className="absolute inset-0 z-20 bg-black/20 flex items-center justify-center">
-          <div className="w-14 h-14 rounded-full border-2 border-white border-t-transparent animate-spin" />
-        </div>
-      )}
+      {/* Long press indicator - removed spinner */}
 
       {/* Right side actions */}
       <div className="absolute right-3 bottom-36 z-10 flex flex-col items-center gap-5">
@@ -267,7 +262,7 @@ const HomeFeedEditSheet = ({ reel, onSave, onClose }: { reel: ReelData; onSave: 
           <div className="flex items-center gap-2">
             <button onClick={handleSave} disabled={!!uploading}
               className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-semibold ${uploading ? "bg-[#8a8b91] text-white cursor-not-allowed" : "bg-primary text-primary-foreground"}`}>
-              {uploading ? <><Loader2 className="w-4 h-4 animate-spin" />Processing... {progress}%</> : <><Save className="w-4 h-4" />Done</>}
+              {uploading ? <>Processing... {progress}%</> : <><Save className="w-4 h-4" />Done</>}
             </button>
             <button onClick={onClose} className="p-2 hover:bg-secondary rounded-full"><X className="w-5 h-5 text-muted-foreground" /></button>
           </div>
@@ -285,11 +280,11 @@ const HomeFeedEditSheet = ({ reel, onSave, onClose }: { reel: ReelData; onSave: 
             </div>
             <div className="flex flex-col gap-2">
               <label className={`flex items-center gap-1.5 text-[hsl(var(--tiktok-cyan))] text-[13px] font-semibold cursor-pointer ${uploading ? "opacity-50 pointer-events-none" : ""}`}>
-                {uploading === "thumbnail" ? <Loader2 className="w-4 h-4 animate-spin" /> : <span>📷</span>} Change Thumbnail
+                {uploading === "thumbnail" ? null : <span>📷</span>} Change Thumbnail
                 <input type="file" accept="image/*" onChange={handleThumbnailChange} className="hidden" />
               </label>
               <label className={`flex items-center gap-1.5 text-primary text-[13px] font-semibold cursor-pointer ${uploading ? "opacity-50 pointer-events-none" : ""}`}>
-                {uploading === "video" ? <Loader2 className="w-4 h-4 animate-spin" /> : <span>🎬</span>} {videoUrl ? "Change Video" : "Upload Video"}
+                {uploading === "video" ? null : <span>🎬</span>} {videoUrl ? "Change Video" : "Upload Video"}
                 <input type="file" accept="video/*" onChange={handleVideoChange} className="hidden" />
               </label>
             </div>

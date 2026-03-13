@@ -97,12 +97,7 @@ const VideoThumbnail = ({ reel, onClick, onLongPress }: VideoThumbnailProps) => 
         </span>
       </div>
 
-      {/* Long press indicator */}
-      {pressing && (
-        <div className="absolute inset-0 bg-background/30 flex items-center justify-center">
-          <div className="w-12 h-12 rounded-full border-2 border-foreground border-t-transparent animate-spin" />
-        </div>
-      )}
+      {/* Long press indicator - removed spinner */}
     </div>
   );
 };

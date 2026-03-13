@@ -6,7 +6,7 @@ interface PullToRefreshProps {
 const PullToRefresh = ({ onRefresh: _onRefresh, children }: PullToRefreshProps) => {
   return (
     <div
-      className="h-full overflow-y-auto overscroll-y-none scrollbar-hide"
+      className="h-full overflow-y-auto overscroll-y-contain scrollbar-hide"
       style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
     >
       {children}
