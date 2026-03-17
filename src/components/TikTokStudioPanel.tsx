@@ -10,14 +10,28 @@ const TikTokDots = () => (
 );
 
 const SkeletonCard = () => (
-  <div className="bg-card rounded-xl p-4 border border-border space-y-3">
-    <div className="h-5 w-32 skeleton" />
-    <div className="h-3 w-48 skeleton opacity-60" />
-    <div className="grid grid-cols-2 gap-2 mt-4">
-      <div className="h-24 skeleton rounded-2xl" />
-      <div className="h-24 skeleton rounded-2xl" />
+  <div className="w-full space-y-8">
+    {/* Analytics Summary Plate */}
+    <div className="grid grid-cols-3 gap-3">
+      {[1, 2, 3].map(i => (
+        <div key={i} className="h-20 bg-muted/10 rounded-xl skeleton" />
+      ))}
     </div>
-    <div className="h-40 skeleton mt-4 w-full" />
+
+    {/* Inspiration List */}
+    <div className="space-y-6">
+      <div className="h-5 w-32 skeleton mb-4" />
+      {[1, 2, 3, 4].map(i => (
+        <div key={i} className="flex items-center gap-3">
+          <div className="w-12 h-12 rounded-full skeleton shrink-0" />
+          <div className="flex-1 space-y-2">
+            <div className="h-4 w-3/4 skeleton" />
+            <div className="h-3 w-1/2 skeleton opacity-50" />
+          </div>
+          <div className="h-8 w-16 rounded-full skeleton shrink-0" />
+        </div>
+      ))}
+    </div>
   </div>
 );
 

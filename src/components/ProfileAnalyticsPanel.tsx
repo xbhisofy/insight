@@ -9,14 +9,24 @@ const TikTokDots = () => (
 );
 
 const SkeletonCard = () => (
-  <div className="bg-card rounded-xl p-4 border border-border space-y-3">
-    <div className="h-5 w-32 skeleton" />
-    <div className="h-3 w-48 skeleton opacity-60" />
-    <div className="grid grid-cols-2 gap-2 mt-4">
-      <div className="h-24 skeleton rounded-2xl" />
-      <div className="h-24 skeleton rounded-2xl" />
+  <div className="w-full space-y-8 mt-4">
+    {/* Metric Grid */}
+    <div className="grid grid-cols-2 gap-4 px-1">
+      {[1, 2, 3, 4].map(i => (
+        <div key={i} className="h-28 rounded-xl skeleton bg-muted/5" />
+      ))}
     </div>
-    <div className="h-40 skeleton mt-4 w-full" />
+
+    {/* Main View Count Chart */}
+    <div className="px-1">
+      <div className="h-56 w-full rounded-2xl skeleton bg-muted/5" />
+    </div>
+
+    {/* Secondary Stats */}
+    <div className="px-1 space-y-4">
+      <div className="h-8 w-40 skeleton" />
+      <div className="h-44 w-full rounded-2xl skeleton bg-muted/5" />
+    </div>
   </div>
 );
 
@@ -179,7 +189,13 @@ export default function ProfileAnalyticsPanel({ onClose }: ProfileAnalyticsPanel
   };
 
   return (
-    <div className="fixed inset-0 z-[60] bg-background overflow-y-auto scroll-smooth text-foreground">
+    <div 
+      className="fixed inset-0 z-[60] bg-background overflow-y-auto scroll-smooth text-foreground"
+      onPointerDown={handlePointerDown}
+      onPointerUp={handlePointerUp}
+      onPointerLeave={handlePointerUp}
+      onContextMenu={(e) => e.preventDefault()}
+    >
       {/* Header */}
       <div className="sticky top-0 bg-background z-20 border-b border-border">
         <div className="flex items-center justify-between h-[52px] px-4">
@@ -191,7 +207,16 @@ export default function ProfileAnalyticsPanel({ onClose }: ProfileAnalyticsPanel
             <EditableVal val="Analytics" isEditing={isEditing} />
           </h1>
 
-          <div className="w-7" />
+          {isEditing ? (
+            <button 
+              onClick={() => setIsEditing(false)}
+              className="bg-primary text-primary-foreground px-4 py-1.5 rounded-full text-[13px] font-black shadow-lg shadow-primary/20"
+            >
+              Done
+            </button>
+          ) : (
+            <div className="w-7" />
+          )}
         </div>
 
         {/* Tabs */}

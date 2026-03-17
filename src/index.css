@@ -214,9 +214,9 @@
     50% { transform: translateX(-10px) scale(1.1); z-index: 2; }
   }
 
-  /* Skeleton Screen Styles - Refined */
+  /* Skeleton Screen Styles - Refined & Subtle */
   .skeleton {
-    @apply bg-muted/40 dark:bg-zinc-800/60;
+    @apply bg-muted/30 dark:bg-zinc-800/40;
     position: relative;
     overflow: hidden;
     border-radius: 6px;
@@ -233,7 +233,7 @@
     background-image: linear-gradient(
       90deg,
       transparent 0%,
-      rgba(255, 255, 255, 0.08) 50%,
+      rgba(255, 255, 255, 0.05) 50%,
       transparent 100%
     );
     animation: shimmer 1.8s infinite;
@@ -243,7 +243,7 @@
     background-image: linear-gradient(
       90deg,
       transparent 0%,
-      rgba(255, 255, 255, 0.04) 50%,
+      rgba(255, 255, 255, 0.03) 50%,
       transparent 100%
     );
   }

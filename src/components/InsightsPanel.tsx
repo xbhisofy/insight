@@ -19,14 +19,33 @@ const TikTokDots = () => (
 );
 
 const SkeletonCard = () => (
-  <div className="mx-4 mt-2.5 p-4 bg-muted/20 rounded-xl space-y-3">
-    <div className="h-5 w-32 skeleton" />
-    <div className="h-3 w-48 skeleton opacity-60" />
-    <div className="grid grid-cols-2 gap-2 mt-4">
-      <div className="h-24 skeleton rounded-2xl" />
-      <div className="h-24 skeleton rounded-2xl" />
+  <div className="w-full space-y-6">
+    {/* Profile row */}
+    <div className="flex items-center gap-3 px-2">
+      <div className="w-10 h-10 rounded-full skeleton" />
+      <div className="space-y-2">
+        <div className="h-4 w-24 skeleton" />
+        <div className="h-3 w-16 skeleton opacity-50" />
+      </div>
     </div>
-    <div className="h-40 skeleton mt-4 w-full" />
+    
+    {/* Stats Grid */}
+    <div className="grid grid-cols-3 gap-3 px-2">
+      {[1, 2, 3, 4, 5].map(i => (
+        <div key={i} className="h-20 bg-muted/10 rounded-xl skeleton" />
+      ))}
+    </div>
+
+    {/* Big Chart Area */}
+    <div className="px-2">
+      <div className="h-44 w-full bg-muted/10 rounded-2xl skeleton" />
+    </div>
+
+    {/* List items */}
+    <div className="space-y-3 px-2">
+      <div className="h-12 w-full skeleton rounded-xl" />
+      <div className="h-12 w-full skeleton rounded-xl" />
+    </div>
   </div>
 );
 
