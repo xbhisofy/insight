@@ -189,156 +189,158 @@ export default function ProfileAnalyticsPanel({ onClose }: ProfileAnalyticsPanel
   };
 
   return (
-    <div 
+    <div
       className="fixed inset-0 z-[60] bg-background overflow-y-auto scroll-smooth text-foreground"
       onPointerDown={handlePointerDown}
       onPointerUp={handlePointerUp}
       onPointerLeave={handlePointerUp}
       onContextMenu={(e) => e.preventDefault()}
     >
-      {/* Header */}
-      <div className="sticky top-0 bg-background z-20 border-b border-border">
-        <div className="flex items-center justify-between h-[52px] px-4">
-          <button onClick={onClose} className="p-1 -ml-1">
-            <ArrowLeft className="w-7 h-7 text-foreground" />
-          </button>
-
-          <h1 className="flex-1 text-center font-black text-[17.5px] tracking-tight">
-            <EditableVal val="Analytics" isEditing={isEditing} />
-          </h1>
-
-          {isEditing ? (
-            <button 
-              onClick={() => setIsEditing(false)}
-              className="bg-primary text-primary-foreground px-4 py-1.5 rounded-full text-[13px] font-black shadow-lg shadow-primary/20"
-            >
-              Done
+      <div className="max-w-lg mx-auto min-h-screen flex flex-col bg-background shadow-2xl relative border-x border-border/50">
+        {/* Header */}
+        <div className="sticky top-0 bg-background z-20 border-b border-border">
+          <div className="flex items-center justify-between h-[52px] px-4">
+            <button onClick={onClose} className="p-1 -ml-1">
+              <ArrowLeft className="w-7 h-7 text-foreground" />
             </button>
-          ) : (
-            <div className="w-7" />
-          )}
-        </div>
-
-        {/* Tabs */}
-        <div className="relative w-full overflow-hidden tab-shadow-right border-b border-border bg-background">
-          <div className="flex w-full overflow-x-auto scrollbar-hide px-3 py-1 gap-6">
-            <div className="relative flex whitespace-nowrap px-1 gap-6">
-              <TabBtn label="Inspiration" active={activeTab === "inspiration"} onClick={() => handleTabChange("inspiration")} isEditing={isEditing} />
-              <TabBtn label="Overview" active={activeTab === "overview"} onClick={() => handleTabChange("overview")} isEditing={isEditing} />
-              <TabBtn label="Content" active={activeTab === "content"} onClick={() => handleTabChange("content")} isEditing={isEditing} />
-              <TabBtn label="Viewers" active={activeTab === "viewers"} onClick={() => handleTabChange("viewers")} isEditing={isEditing} />
-              <TabBtn label="Followers" active={activeTab === "followers"} onClick={() => handleTabChange("followers")} isEditing={isEditing} />
-            </div>
-          </div>
-        </div>
-
-        {/* Filters */}
-        <div className="relative w-full overflow-hidden tab-shadow-right bg-background">
-          <div className="flex w-full overflow-x-auto scrollbar-hide px-4 py-3 gap-2">
-            {["7 days", "28 days", "60 days", "365 days", "Custom"].map(f => (
+            <h1 className="flex-1 text-center font-black text-[17.5px] tracking-tight">
+              <EditableVal val="Analytics" isEditing={isEditing} />
+            </h1>
+            {isEditing ? (
               <button
-                key={f}
-                onClick={() => handleFilterChange(f)}
-                className={`whitespace-nowrap px-[18px] py-[6px] rounded-full text-[14px] font-black transition-colors ${timeFilter === f ? "bg-foreground text-background" : "bg-muted text-foreground hover:bg-muted/80"
-                  }`}
+                onClick={() => setIsEditing(false)}
+                className="bg-primary text-primary-foreground px-4 py-1.5 rounded-full text-[13px] font-black shadow-lg shadow-primary/20"
               >
-                <EditableVal val={f} isEditing={isEditing} />
+                Done
               </button>
-            ))}
+            ) : (
+              <div className="w-7" />
+            )}
           </div>
-        </div>
-      </div>
 
-      <div className="p-3 pb-20">
-        {isLoading && (
-          <div className="loading-full-screen">
-            <TikTokDots />
-            <div className="w-full space-y-4 px-6 mt-16 max-w-lg">
-              <SkeletonCard />
-              <SkeletonCard />
+          {/* Tabs */}
+          <div className="relative w-full overflow-hidden tab-shadow-right border-b border-border bg-background">
+            <div className="flex w-full overflow-x-auto scrollbar-hide px-3 py-1 gap-6">
+              <div className="relative flex whitespace-nowrap px-1 gap-6">
+                <TabBtn label="Inspiration" active={activeTab === "inspiration"} onClick={() => handleTabChange("inspiration")} isEditing={isEditing} />
+                <TabBtn label="Overview" active={activeTab === "overview"} onClick={() => handleTabChange("overview")} isEditing={isEditing} />
+                <TabBtn label="Content" active={activeTab === "content"} onClick={() => handleTabChange("content")} isEditing={isEditing} />
+                <TabBtn label="Viewers" active={activeTab === "viewers"} onClick={() => handleTabChange("viewers")} isEditing={isEditing} />
+                <TabBtn label="Followers" active={activeTab === "followers"} onClick={() => handleTabChange("followers")} isEditing={isEditing} />
+              </div>
             </div>
           </div>
-        )}
 
-        <div className={isLoading ? "opacity-0 invisible" : "opacity-100 visible transition-opacity duration-300"}>
-          {activeTab === "overview" && (
-            <OverviewContent
-              isEditing={isEditing}
-              data={getFilterData(timeFilter).overview}
-              onUpdate={(d) => updateFilterData("overview", d)}
-            />
-          )}
-          {activeTab === "viewers" && (
-            <ViewersContent
-              isEditing={isEditing}
-              data={getFilterData(timeFilter).viewers}
-              onUpdate={(d) => updateFilterData("viewers", d)}
-              onSeeMore={() => setShowLocationsDetail(true)}
-            />
-          )}
-          {activeTab === "inspiration" && (
-            <InspirationContent
-              isEditing={isEditing}
-              data={getFilterData(timeFilter).inspiration}
-              onUpdate={(d) => updateFilterData("inspiration", d)}
-            />
-          )}
-          {activeTab === "content" && (
-            <ContentTabContent
-              isEditing={isEditing}
-              data={getFilterData(timeFilter).content}
-              onUpdate={(d) => updateFilterData("content", d)}
-            />
-          )}
-          {activeTab === "followers" && (
-            <FollowersContent
-              isEditing={isEditing}
-              data={getFilterData(timeFilter).followers}
-              onUpdate={(d) => updateFilterData("followers", d)}
-            />
-          )}
-        </div>
-      </div>
-
-      {/* Locations Detail Overlay */}
-      {showLocationsDetail && (
-        <div
-          className="fixed inset-0 z-[70] bg-background overflow-y-auto scrollbar-hide"
-          onPointerDown={handlePointerDown}
-          onPointerUp={handlePointerUp}
-          onPointerLeave={handlePointerUp}
-        >
-          <div className="sticky top-0 bg-background z-10 border-b border-border flex items-center justify-between px-4 h-[52px]">
-            <div className="w-8" />
-            <h2 className="text-[17.5px] font-black"><EditableVal val="Locations" isEditing={isEditing} /></h2>
-            <button onClick={() => setShowLocationsDetail(false)} className="p-1">
-              <X className="w-7 h-7 text-foreground" />
-            </button>
+          {/* Filters */}
+          <div className="relative w-full overflow-hidden tab-shadow-right bg-background">
+            <div className="flex w-full overflow-x-auto scrollbar-hide px-4 py-3 gap-2">
+              {["7 days", "28 days", "60 days", "365 days", "Custom"].map(f => (
+                <button
+                  key={f}
+                  onClick={() => handleFilterChange(f)}
+                  className={`whitespace-nowrap px-[18px] py-[6px] rounded-full text-[14px] font-black transition-colors ${timeFilter === f ? "bg-foreground text-background" : "bg-muted text-foreground hover:bg-muted/80"
+                    }`}
+                >
+                  <EditableVal val={f} isEditing={isEditing} />
+                </button>
+              ))}
+            </div>
           </div>
-          <div className="p-5 space-y-[22px]">
-            {[
-              { label: "Nepal", pct: "45.6%" },
-              { label: "United States", pct: "6.9%" },
-              { label: "Germany", pct: "3.3%" },
-              { label: "India", pct: "3.3%" },
-              { label: "United Arab Emirates", pct: "2.9%" },
-              { label: "Canada", pct: "2.6%" },
-              { label: "France", pct: "2.3%" },
-              { label: "United Kingdom", pct: "2.0%" },
-              { label: "Ukraine", pct: "2.0%" },
-              { label: "Philippines", pct: "1.6%" },
-              { label: "Other", pct: "27.5%" },
-            ].map((loc, idx) => (
-              <LocationBar key={idx} label={loc.label} pct={loc.pct} width={loc.pct} active={idx === 0 || idx === 10} isEditing={isEditing} />
-            ))}
-            {isEditing && (
-              <button className="w-full mt-4 py-3 rounded-lg border border-dashed border-border text-muted-foreground font-bold text-[13px] hover:bg-muted/50">
-                + Add location
-              </button>
+        </div>
+
+        <div className="p-3 pb-20 flex-1">
+          {isLoading && (
+            <div className="loading-full-screen">
+              <TikTokDots />
+              <div className="w-full space-y-4 px-6 mt-16 max-w-lg">
+                <SkeletonCard />
+                <SkeletonCard />
+              </div>
+            </div>
+          )}
+
+          <div className={isLoading ? "opacity-0 invisible" : "opacity-100 visible transition-opacity duration-300"}>
+            {activeTab === "overview" && (
+              <OverviewContent
+                isEditing={isEditing}
+                data={getFilterData(timeFilter).overview}
+                onUpdate={(d) => updateFilterData("overview", d)}
+              />
+            )}
+            {activeTab === "viewers" && (
+              <ViewersContent
+                isEditing={isEditing}
+                data={getFilterData(timeFilter).viewers}
+                onUpdate={(d) => updateFilterData("viewers", d)}
+                onSeeMore={() => setShowLocationsDetail(true)}
+              />
+            )}
+            {activeTab === "inspiration" && (
+              <InspirationContent
+                isEditing={isEditing}
+                data={getFilterData(timeFilter).inspiration}
+                onUpdate={(d) => updateFilterData("inspiration", d)}
+              />
+            )}
+            {activeTab === "content" && (
+              <ContentTabContent
+                isEditing={isEditing}
+                data={getFilterData(timeFilter).content}
+                onUpdate={(d) => updateFilterData("content", d)}
+              />
+            )}
+            {activeTab === "followers" && (
+              <FollowersContent
+                isEditing={isEditing}
+                data={getFilterData(timeFilter).followers}
+                onUpdate={(d) => updateFilterData("followers", d)}
+              />
             )}
           </div>
         </div>
-      )}
+
+        {/* Locations Detail Overlay */}
+        {showLocationsDetail && (
+          <div
+            className="fixed inset-0 z-[70] bg-black/60 backdrop-blur-sm overflow-y-auto scrollbar-hide flex justify-center"
+            onPointerDown={handlePointerDown}
+            onPointerUp={handlePointerUp}
+            onPointerLeave={handlePointerUp}
+          >
+            <div className="w-full max-w-lg bg-background min-h-screen">
+              <div className="sticky top-0 bg-background z-10 border-b border-border flex items-center justify-between px-4 h-[52px]">
+                <div className="w-8" />
+                <h2 className="text-[17.5px] font-black"><EditableVal val="Locations" isEditing={isEditing} /></h2>
+                <button onClick={() => setShowLocationsDetail(false)} className="p-1 text-foreground hover:bg-muted rounded-full transition-colors">
+                  <X className="w-7 h-7" />
+                </button>
+              </div>
+              <div className="p-5 space-y-[22px]">
+                {[
+                  { label: "Nepal", pct: "45.6%" },
+                  { label: "United States", pct: "6.9%" },
+                  { label: "Germany", pct: "3.3%" },
+                  { label: "India", pct: "3.3%" },
+                  { label: "United Arab Emirates", pct: "2.9%" },
+                  { label: "Canada", pct: "2.6%" },
+                  { label: "France", pct: "2.3%" },
+                  { label: "United Kingdom", pct: "2.0%" },
+                  { label: "Ukraine", pct: "2.0%" },
+                  { label: "Philippines", pct: "1.6%" },
+                  { label: "Other", pct: "27.5%" },
+                ].map((loc, idx) => (
+                  <LocationBar key={idx} label={loc.label} pct={loc.pct} width={loc.pct} active={idx === 0 || idx === 10} isEditing={isEditing} />
+                ))}
+                {isEditing && (
+                  <button className="w-full mt-4 py-3 rounded-lg border border-dashed border-border text-muted-foreground font-bold text-[13px] hover:bg-muted/50">
+                    + Add location
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

@@ -103,45 +103,48 @@ const InsightsPanel = ({ reel, onClose, onSave }: InsightsPanelProps) => {
       onPointerLeave={handlePointerUp}
       onContextMenu={e => e.preventDefault()}
     >
-      {/* Top bar */}
-      <div className="sticky top-0 bg-background z-10 border-b border-border">
-        <div className="flex items-center justify-between h-[52px] px-4">
-          <button onClick={onClose} className="p-1 -ml-1">
-            <ArrowLeft className="w-7 h-7 text-foreground" />
-          </button>
-          <h1 className="flex-1 text-center font-bold text-[17.5px] mr-1 ml-0 tracking-tight flex items-center justify-center gap-1.5">
-            {isEditing ? (
-              <span className="text-primary animate-pulse">Edit Mode</span>
-            ) : (
-              <EditableVal val="Video analysis" isEditing={isEditing} />
-            )}
-          </h1>
-          {isEditing ? (
-            <button 
-              onClick={() => setIsEditing(false)}
-              className="bg-primary text-primary-foreground px-4 py-1.5 rounded-full text-[13px] font-black shadow-lg shadow-primary/20"
-            >
-              Done
+      <div className="max-w-lg mx-auto min-h-screen flex flex-col bg-background shadow-2xl relative border-x border-border/50">
+        {/* Top bar */}
+        <div className="sticky top-0 bg-background z-10 border-b border-border">
+          <div className="flex items-center justify-between h-[52px] px-3">
+            <button onClick={onClose} className="p-1 -ml-1">
+              <ArrowLeft className="w-7 h-7 text-foreground" />
             </button>
-          ) : (
-            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-border bg-card">
-              <div className="relative">
-                <svg className="w-4 h-4 text-foreground" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-                </svg>
-                <div className="absolute -bottom-[2px] -right-[2px] bg-card rounded-full p-[0.5px]">
-                  <svg className="w-2.5 h-2.5 text-foreground" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-                  </svg>
-                </div>
-              </div>
-              <span className="text-[12px] font-black tracking-tight text-foreground">
-                <EditableVal val="TikTok Studio" isEditing={isEditing} />
+            <h1 className="flex-1 text-center font-bold text-[16px] sm:text-[17.5px] px-1 tracking-tight flex items-center justify-center gap-1.5 overflow-hidden">
+              <span className="truncate">
+                {isEditing ? (
+                  <span className="text-primary animate-pulse">Edit Mode</span>
+                ) : (
+                  <EditableVal val="Video analysis" isEditing={isEditing} />
+                )}
               </span>
-            </div>
-          )}
+            </h1>
+            {isEditing ? (
+              <button 
+                onClick={() => setIsEditing(false)}
+                className="bg-primary text-primary-foreground px-4 py-1.5 rounded-full text-[13px] font-black shadow-lg shadow-primary/20 shrink-0"
+              >
+                Done
+              </button>
+            ) : (
+              <div className="flex items-center gap-1 px-2.5 py-1.5 rounded-full border border-border bg-card shrink-0">
+                <div className="relative">
+                  <svg className="w-3.5 h-3.5 text-foreground" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                  </svg>
+                  <div className="absolute -bottom-[1px] -right-[1px] bg-card rounded-full p-[0.3px]">
+                    <svg className="w-2 h-2 text-foreground" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+                    </svg>
+                  </div>
+                </div>
+                <span className="text-[11px] font-black tracking-tight text-foreground whitespace-nowrap">
+                  <EditableVal val="TikTok Studio" isEditing={isEditing} />
+                </span>
+              </div>
+            )}
+          </div>
         </div>
-      </div>
 
       {/* Video thumbnail + date */}
       <div className="flex flex-col items-center pt-5 pb-3 bg-background">
@@ -198,11 +201,12 @@ const InsightsPanel = ({ reel, onClose, onSave }: InsightsPanelProps) => {
           </div>
         )}
         
-        <div className={isLoading ? "opacity-0 invisible" : "opacity-100 visible transition-opacity duration-300"}>
-          {activeTab === "overview" && <OverviewTab ins={ins} reel={localReel} isEditing={isEditing} onUpdate={updateInsights} />}
-          {activeTab === "viewers" && <ViewersTab ins={ins} isEditing={isEditing} onUpdate={updateInsights} />}
-          {activeTab === "engagement" && <EngagementTab ins={ins} reel={localReel} isEditing={isEditing} />}
-          {activeTab === "inspiration" && <InspirationTab ins={ins} isEditing={isEditing} />}
+          <div className={isLoading ? "opacity-0 invisible" : "opacity-100 visible transition-opacity duration-300"}>
+            {activeTab === "overview" && <OverviewTab ins={ins} reel={localReel} isEditing={isEditing} onUpdate={updateInsights} />}
+            {activeTab === "viewers" && <ViewersTab ins={ins} isEditing={isEditing} onUpdate={updateInsights} />}
+            {activeTab === "engagement" && <EngagementTab ins={ins} reel={localReel} isEditing={isEditing} />}
+            {activeTab === "inspiration" && <InspirationTab ins={ins} isEditing={isEditing} />}
+          </div>
         </div>
       </div>
     </div>
@@ -410,10 +414,10 @@ const OverviewTab = ({ ins, reel, isEditing, onUpdate }: { ins: ReelData["insigh
                   : "border-border bg-card"
               }`}
             >
-              <p className="text-foreground/60 text-[13px] font-black mb-1.5 capitalize tracking-tight">
+              <p className="text-foreground/60 text-[12px] font-black mb-1 capitalize tracking-tight truncate">
                 <EditableVal val={m.label} isEditing={isEditing} />
               </p>
-              <p className="text-foreground text-[22px] font-black leading-tight">
+              <p className="text-foreground text-[18px] sm:text-[20px] font-black leading-tight break-words">
                 <EditableVal 
                   val={m.value} 
                   isEditing={isEditing} 
