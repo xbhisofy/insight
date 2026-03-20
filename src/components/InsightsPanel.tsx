@@ -129,28 +129,20 @@ const InsightsPanel = ({ reel, onClose, onSave }: InsightsPanelProps) => {
                 Done
               </button>
             ) : (
-              <div className="flex items-center gap-2">
-                <button 
-                  onClick={() => setIsEditing(true)}
-                  className="p-1.5 hover:bg-muted rounded-full transition-colors"
-                >
-                  <Edit3 className="w-5 h-5 text-foreground" />
-                </button>
-                <div className="flex items-center gap-1 px-2.5 py-1.5 rounded-full border border-border bg-card shrink-0">
-                  <div className="relative">
-                    <svg className="w-3.5 h-3.5 text-foreground" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+              <div className="flex items-center gap-1 px-2.5 py-1.5 rounded-full border border-border bg-card shrink-0">
+                <div className="relative">
+                  <svg className="w-3.5 h-3.5 text-foreground" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                  </svg>
+                  <div className="absolute -bottom-[1px] -right-[1px] bg-card rounded-full p-[0.3px]">
+                    <svg className="w-2 h-2 text-foreground" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.46 21z" />
                     </svg>
-                    <div className="absolute -bottom-[1px] -right-[1px] bg-card rounded-full p-[0.3px]">
-                      <svg className="w-2 h-2 text-foreground" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-                      </svg>
-                    </div>
                   </div>
-                  <span className="text-[11px] font-black tracking-tight text-foreground whitespace-nowrap">
-                    <EditableVal val="TikTok Studio" isEditing={isEditing} />
-                  </span>
                 </div>
+                <span className="text-[11px] font-black tracking-tight text-foreground whitespace-nowrap">
+                  <EditableVal val="TikTok Studio" isEditing={isEditing} />
+                </span>
               </div>
             )}
           </div>

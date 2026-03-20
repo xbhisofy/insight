@@ -166,9 +166,8 @@ const FeedCard = ({ reel, onLongPress }: { reel: ReelData; onLongPress: () => vo
           <span className="text-white text-[12px] font-semibold mt-1 drop-shadow-lg">{formatNumber(ins.saves)}</span>
         </div>
         <div className="flex flex-col items-center">
-          <button onClick={onLongPress}>
-            <Edit3 className="w-8 h-8 text-white drop-shadow-lg" />
-          </button>
+          <Share2 className="w-8 h-8 text-white drop-shadow-lg" />
+          <span className="text-white text-[12px] font-semibold mt-1 drop-shadow-lg">{formatNumber(ins.shares)}</span>
         </div>
       </div>
 

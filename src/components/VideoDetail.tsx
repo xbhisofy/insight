@@ -106,9 +106,7 @@ const VideoDetail = ({ reel, onBack, onInsights, onLongPress, onSave }: VideoDet
 
         {/* More */}
         <div className="flex flex-col items-center">
-          <button onClick={() => setEditing(true)}>
-            <MoreHorizontal className="w-8 h-8 text-white drop-shadow-lg" />
-          </button>
+          <MoreHorizontal className="w-8 h-8 text-white drop-shadow-lg" />
         </div>
 
         {/* Spinning music disc */}
@@ -154,13 +152,6 @@ const VideoDetail = ({ reel, onBack, onInsights, onLongPress, onSave }: VideoDet
 
           {/* More insights button */}
           <div className="flex items-center gap-2">
-            <button
-              onClick={() => setEditing(true)}
-              className="flex items-center gap-1.5 bg-white/20 backdrop-blur-sm rounded-full px-4 py-2"
-            >
-              <Save className="w-4 h-4 text-white" />
-              <span className="text-white text-[13px] font-semibold">Edit</span>
-            </button>
             <button
               onClick={onInsights}
               className="flex items-center gap-1.5 bg-white/20 backdrop-blur-sm rounded-full px-4 py-2"
