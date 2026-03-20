@@ -116,12 +116,25 @@ const ProfileHeader = ({ reels, activeTab, onTabChange, onSetReels }: ProfileHea
         </div>
       </div>
 
-      {/* Display Name */}
+      {/* Display Name + Edit button */}
       <div className="flex flex-col items-center justify-center mt-2 px-4">
         <div className="flex flex-col items-center">
-          <div className="flex items-center gap-0">
-            <h1 className="text-foreground font-black text-[17.5px] tracking-tight">{profile.displayName}</h1>
-            <ChevronDown className="w-4 h-4 text-foreground translate-y-[1px]" strokeWidth={3.5} />
+          <div className="relative flex items-center">
+            <div className="flex items-center gap-0">
+              <h1 className="text-foreground font-black text-[17.5px] tracking-tight">{profile.displayName}</h1>
+              <ChevronDown className="w-4 h-4 text-foreground translate-y-[1px]" strokeWidth={3.5} />
+            </div>
+            
+            <button
+              onClick={() => {
+                setEditForm(profile);
+                setPostCount(reels.length.toString());
+                setEditing(true);
+              }}
+              className="absolute left-[calc(100%+4px)] bg-secondary text-foreground text-[14px] font-bold px-3 py-1 rounded-full whitespace-nowrap"
+            >
+              Edit
+            </button>
           </div>
           <p className="text-muted-foreground/60 text-[13px] font-bold mt-1">@{profile.username}</p>
         </div>
@@ -136,27 +149,10 @@ const ProfileHeader = ({ reels, activeTab, onTabChange, onSetReels }: ProfileHea
         <StatColumn value={formatNumber(totalLikes)} label="Likes" />
       </div>
 
-      {/* Bio / Links / Edit Profile / TikTok Studio */}
-      <div className="flex flex-col gap-3 items-center text-center mt-3 px-8 mb-1">
-        {profile.bio && <p className="text-foreground text-[14px] whitespace-pre-line font-medium leading-[1.3] mb-1">{profile.bio}</p>}
-        
-        <div className="flex items-center gap-1.5 w-full max-w-[280px]">
-          <button 
-            onClick={() => {
-              setEditForm(profile);
-              setPostCount(reels.length.toString());
-              setEditing(true);
-            }}
-            className="flex-1 bg-secondary text-foreground text-[14px] font-bold h-9 rounded-lg flex items-center justify-center"
-          >
-            Edit profile
-          </button>
-          <button className="w-9 h-9 bg-secondary rounded-lg flex items-center justify-center">
-            <UserPlus className="w-5 h-5 text-foreground" strokeWidth={2.5} />
-          </button>
-        </div>
-
-        <button className="flex items-center gap-1.5 mt-1" onClick={() => setShowAnalytics(true)}>
+      {/* Bio / Links / TikTok Studio */}
+      <div className="flex flex-col items-center text-center mt-1.5 px-8 mb-1">
+        {profile.bio && <p className="text-foreground text-[14px] whitespace-pre-line font-medium leading-[1.3] mb-2">{profile.bio}</p>}
+        <button className="flex items-center gap-1.5" onClick={() => setShowAnalytics(true)}>
           <svg className="w-[16px] h-[16px] text-[#fe2c55]" viewBox="0 0 24 24" fill="currentColor">
             <path d="M12 2C9.243 2 7 4.243 7 7C7 9.757 9.243 12 12 12C14.757 12 17 9.757 17 7C17 4.243 14.757 2 12 2Z"/>
             <path d="M15.968 12.956C14.782 12.348 13.434 12 12 12C7.038 12 3 16.037 3 21H14.12C14.65 19.34 15.82 18.06 17.65 17.6L15.968 12.956Z" />
