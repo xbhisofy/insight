@@ -226,13 +226,9 @@ export default function ProfileAnalyticsPanel({ onClose }: ProfileAnalyticsPanel
                 Done
               </button>
             ) : (
-              <button
-                onClick={() => setIsEditing(true)}
-                className="p-1 -mr-1"
-              >
-                <Edit3 className="w-6 h-6 text-foreground" />
-              </button>
+              <div className="w-7" />
             )}
+
           </div>
 
           {/* Tabs */}
