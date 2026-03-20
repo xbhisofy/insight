@@ -1,4 +1,5 @@
-import { ReelData } from "@/lib/mockData";
+import { formatNumber, ReelData } from "@/lib/mockData";
+import { parseInputNumber } from "@/lib/utils";
 import { uploadToCloudinary } from "@/lib/cloudinary";
 import { X, Save, Image, Film, Loader2 } from "lucide-react";
 import { useState, useRef } from "react";
@@ -17,11 +18,11 @@ const EditModal = ({ reel, onSave, onClose }: EditModalProps) => {
   const [createdAt, setCreatedAt] = useState(reel.createdAt);
   const [thumbnail, setThumbnail] = useState(reel.thumbnail);
   const [videoUrl, setVideoUrl] = useState(reel.videoUrl || "");
-  const [views, setViews] = useState(reel.insights.views.toString());
-  const [likes, setLikes] = useState(reel.insights.likes.toString());
-  const [comments, setComments] = useState(reel.insights.comments.toString());
-  const [shares, setShares] = useState(reel.insights.shares.toString());
-  const [saves, setSaves] = useState(reel.insights.saves.toString());
+  const [views, setViews] = useState(formatNumber(reel.insights.views));
+  const [likes, setLikes] = useState(formatNumber(reel.insights.likes));
+  const [comments, setComments] = useState(formatNumber(reel.insights.comments));
+  const [shares, setShares] = useState(formatNumber(reel.insights.shares));
+  const [saves, setSaves] = useState(formatNumber(reel.insights.saves));
   const [uploading, setUploading] = useState<string | null>(null);
   const [progress, setProgress] = useState(0);
 
@@ -67,11 +68,11 @@ const EditModal = ({ reel, onSave, onClose }: EditModalProps) => {
       music,
       insights: {
         ...reel.insights,
-        views: parseInt(views) || 0,
-        likes: parseInt(likes) || 0,
-        comments: parseInt(comments) || 0,
-        shares: parseInt(shares) || 0,
-        saves: parseInt(saves) || 0,
+        views: parseInputNumber(views),
+        likes: parseInputNumber(likes),
+        comments: parseInputNumber(comments),
+        shares: parseInputNumber(shares),
+        saves: parseInputNumber(saves),
       },
     };
     onSave(updatedReel);
@@ -208,7 +209,7 @@ const NumberField = ({ label, value, onChange }: { label: string; value: string;
   <div>
     <label className="text-xs text-muted-foreground font-medium mb-1 block">{label}</label>
     <input
-      type="number"
+      type="text"
       value={value}
       onChange={(e) => onChange(e.target.value)}
       className="w-full bg-secondary text-foreground rounded-lg px-3 py-2.5 text-sm border border-border focus:border-primary focus:outline-none transition-colors"

@@ -1,6 +1,7 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import { ReelData, formatNumber } from "@/lib/mockData";
-import { ArrowLeft, Play, Heart, MessageCircle, Share2, Bookmark, Info, ChevronRight, X, Save, Upload, Settings, Image as ImageIcon } from "lucide-react";
+import { ArrowLeft, Play, Heart, MessageCircle, Share2, Bookmark, Info, ChevronRight, X, Save, Upload, Settings, Image as ImageIcon, Edit3 } from "lucide-react";
+import { parseInputNumber } from "@/lib/utils";
 
 interface InsightsPanelProps {
   reel: ReelData;
@@ -63,7 +64,7 @@ const InsightsPanel = ({ reel, onClose, onSave }: InsightsPanelProps) => {
   };
 
   const handlePointerDown = () => {
-    timerRef.current = setTimeout(triggerEditMode, 2000);
+    timerRef.current = setTimeout(triggerEditMode, 500); // 500ms
   };
 
   const handlePointerUp = () => {
@@ -76,13 +77,11 @@ const InsightsPanel = ({ reel, onClose, onSave }: InsightsPanelProps) => {
   const updateReel = (updates: Partial<ReelData>) => {
     const next = { ...localReel, ...updates };
     setLocalReel(next);
-    onSave?.(next);
   };
 
   const updateInsights = (updates: any) => {
     const next = { ...localReel, insights: { ...localReel.insights, ...updates } };
     setLocalReel(next);
-    onSave?.(next);
   };
 
   const handleTabChange = (tab: TabName) => {
@@ -121,26 +120,37 @@ const InsightsPanel = ({ reel, onClose, onSave }: InsightsPanelProps) => {
             </h1>
             {isEditing ? (
               <button 
-                onClick={() => setIsEditing(false)}
+                onClick={() => {
+                  onSave?.(localReel);
+                  setIsEditing(false);
+                }}
                 className="bg-primary text-primary-foreground px-4 py-1.5 rounded-full text-[13px] font-black shadow-lg shadow-primary/20 shrink-0"
               >
                 Done
               </button>
             ) : (
-              <div className="flex items-center gap-1 px-2.5 py-1.5 rounded-full border border-border bg-card shrink-0">
-                <div className="relative">
-                  <svg className="w-3.5 h-3.5 text-foreground" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-                  </svg>
-                  <div className="absolute -bottom-[1px] -right-[1px] bg-card rounded-full p-[0.3px]">
-                    <svg className="w-2 h-2 text-foreground" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+              <div className="flex items-center gap-2">
+                <button 
+                  onClick={() => setIsEditing(true)}
+                  className="p-1.5 hover:bg-muted rounded-full transition-colors"
+                >
+                  <Edit3 className="w-5 h-5 text-foreground" />
+                </button>
+                <div className="flex items-center gap-1 px-2.5 py-1.5 rounded-full border border-border bg-card shrink-0">
+                  <div className="relative">
+                    <svg className="w-3.5 h-3.5 text-foreground" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
                     </svg>
+                    <div className="absolute -bottom-[1px] -right-[1px] bg-card rounded-full p-[0.3px]">
+                      <svg className="w-2 h-2 text-foreground" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+                      </svg>
+                    </div>
                   </div>
+                  <span className="text-[11px] font-black tracking-tight text-foreground whitespace-nowrap">
+                    <EditableVal val="TikTok Studio" isEditing={isEditing} />
+                  </span>
                 </div>
-                <span className="text-[11px] font-black tracking-tight text-foreground whitespace-nowrap">
-                  <EditableVal val="TikTok Studio" isEditing={isEditing} />
-                </span>
               </div>
             )}
           </div>
@@ -422,9 +432,8 @@ const OverviewTab = ({ ins, reel, isEditing, onUpdate }: { ins: ReelData["insigh
                   val={m.value} 
                   isEditing={isEditing} 
                   onUpdate={(v) => {
-                    const num = parseInt(v.replace(/[^0-9]/g, ''));
-                    if (!isNaN(num)) onUpdate({ [m.rawKey]: num });
-                  }} 
+                  onUpdate({ [m.rawKey]: parseInputNumber(v) });
+                }} 
                 />
               </p>
             </button>

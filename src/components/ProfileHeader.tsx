@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { ReelData, formatNumber, generateRandomReel } from "@/lib/mockData";
+import { parseInputNumber } from "@/lib/utils";
 import { UserPlus, Grid3X3, Menu, Plus, Bookmark, Heart, Lock, Footprints, Share, ChevronDown } from "lucide-react";
 import avatar from "@/assets/avatar.jpg";
 import TikTokStudioPanel from "./TikTokStudioPanel";
@@ -42,8 +43,13 @@ const ProfileHeader = ({ reels, activeTab, onTabChange, onSetReels }: ProfileHea
   });
 
   const handleSaveProfile = () => {
-    setProfile(editForm);
-    localStorage.setItem("user_profile", JSON.stringify(editForm));
+    const updatedProfile = {
+      ...editForm,
+      following: parseInputNumber(editForm.following).toString(),
+      followers: parseInputNumber(editForm.followers).toString(),
+    };
+    setProfile(updatedProfile);
+    localStorage.setItem("user_profile", JSON.stringify(updatedProfile));
 
     // Handle post count change - generate random reels if count increased
     const targetCount = parseInt(postCount) || reels.length;
@@ -136,9 +142,9 @@ const ProfileHeader = ({ reels, activeTab, onTabChange, onSetReels }: ProfileHea
 
       {/* Stats row */}
       <div className="flex items-center justify-center gap-4 mt-2">
-        <StatColumn value={profile.following} label="Following" />
+        <StatColumn value={formatNumber(parseInputNumber(profile.following))} label="Following" />
         <div className="w-[1px] h-3 bg-border/60" />
-        <StatColumn value={profile.followers} label="Followers" />
+        <StatColumn value={formatNumber(parseInputNumber(profile.followers))} label="Followers" />
         <div className="w-[1px] h-3 bg-border/60" />
         <StatColumn value={formatNumber(totalLikes)} label="Likes" />
       </div>
@@ -225,12 +231,12 @@ const ProfileHeader = ({ reels, activeTab, onTabChange, onSetReels }: ProfileHea
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="text-xs text-muted-foreground font-medium mb-1 block">Following</label>
-                  <input type="number" value={editForm.following} onChange={(e) => setEditForm({ ...editForm, following: e.target.value })}
+                  <input type="text" value={editForm.following} onChange={(e) => setEditForm({ ...editForm, following: e.target.value })}
                     className="w-full bg-secondary text-foreground rounded-lg px-3 py-2.5 text-sm border border-border focus:border-primary focus:outline-none" />
                 </div>
                 <div>
                   <label className="text-xs text-muted-foreground font-medium mb-1 block">Followers</label>
-                  <input type="number" value={editForm.followers} onChange={(e) => setEditForm({ ...editForm, followers: e.target.value })}
+                  <input type="text" value={editForm.followers} onChange={(e) => setEditForm({ ...editForm, followers: e.target.value })}
                     className="w-full bg-secondary text-foreground rounded-lg px-3 py-2.5 text-sm border border-border focus:border-primary focus:outline-none" />
                 </div>
               </div>

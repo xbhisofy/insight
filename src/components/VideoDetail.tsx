@@ -1,7 +1,8 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { ReelData, formatNumber } from "@/lib/mockData";
 import { uploadToCloudinary } from "@/lib/cloudinary";
-import { ArrowLeft, Heart, MessageCircle, Bookmark, MoreHorizontal, Music, Search, Play, Share2, X, Save, Loader2 } from "lucide-react";
+import { ArrowLeft, Heart, MessageCircle, Bookmark, MoreHorizontal, Music, Search, Play, Share2, X, Save, Loader2, Edit3 } from "lucide-react";
+import { parseInputNumber } from "@/lib/utils";
 import avatar from "@/assets/avatar.jpg";
 
 interface VideoDetailProps {
@@ -18,12 +19,17 @@ const VideoDetail = ({ reel, onBack, onInsights, onLongPress, onSave }: VideoDet
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const triggered = useRef(false);
 
+  // Sync localReel with prop updates
+  useEffect(() => {
+    setLocalReel(reel);
+  }, [reel]);
+
   const handlePointerDown = useCallback(() => {
     triggered.current = false;
     timerRef.current = setTimeout(() => {
       triggered.current = true;
       setEditing(true);
-    }, 2000);
+    }, 500); // reduced from 2000ms to 500ms for responsiveness
   }, []);
 
   const handlePointerUp = useCallback(() => {
@@ -100,7 +106,9 @@ const VideoDetail = ({ reel, onBack, onInsights, onLongPress, onSave }: VideoDet
 
         {/* More */}
         <div className="flex flex-col items-center">
-          <MoreHorizontal className="w-8 h-8 text-white drop-shadow-lg" />
+          <button onClick={() => setEditing(true)}>
+            <MoreHorizontal className="w-8 h-8 text-white drop-shadow-lg" />
+          </button>
         </div>
 
         {/* Spinning music disc */}
@@ -145,16 +153,25 @@ const VideoDetail = ({ reel, onBack, onInsights, onLongPress, onSave }: VideoDet
           </div>
 
           {/* More insights button */}
-          <button
-            onClick={onInsights}
-            className="flex items-center gap-1.5 bg-white/20 backdrop-blur-sm rounded-full px-4 py-2"
-          >
-            <svg className="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <rect x="3" y="3" width="18" height="18" rx="2" />
-              <path d="M7 12h10M7 8h6M7 16h8" />
-            </svg>
-            <span className="text-white text-[13px] font-semibold">More insights</span>
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setEditing(true)}
+              className="flex items-center gap-1.5 bg-white/20 backdrop-blur-sm rounded-full px-4 py-2"
+            >
+              <Save className="w-4 h-4 text-white" />
+              <span className="text-white text-[13px] font-semibold">Edit</span>
+            </button>
+            <button
+              onClick={onInsights}
+              className="flex items-center gap-1.5 bg-white/20 backdrop-blur-sm rounded-full px-4 py-2"
+            >
+              <svg className="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <rect x="3" y="3" width="18" height="18" rx="2" />
+                <path d="M7 12h10M7 8h6M7 16h8" />
+              </svg>
+              <span className="text-white text-[13px] font-semibold">More insights</span>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -177,11 +194,11 @@ const ReelEditSheet = ({ reel, onSave, onClose }: { reel: ReelData; onSave: (r: 
   const [videoUrl, setVideoUrl] = useState(reel.videoUrl || "");
   const [createdAt, setCreatedAt] = useState(reel.createdAt);
   const [duration, setDuration] = useState(reel.duration);
-  const [views, setViews] = useState(reel.insights.views.toString());
-  const [likes, setLikes] = useState(reel.insights.likes.toString());
-  const [comments, setComments] = useState(reel.insights.comments.toString());
-  const [shares, setShares] = useState(reel.insights.shares.toString());
-  const [saves, setSaves] = useState(reel.insights.saves.toString());
+  const [views, setViews] = useState(formatNumber(reel.insights.views));
+  const [likes, setLikes] = useState(formatNumber(reel.insights.likes));
+  const [comments, setComments] = useState(formatNumber(reel.insights.comments));
+  const [shares, setShares] = useState(formatNumber(reel.insights.shares));
+  const [saves, setSaves] = useState(formatNumber(reel.insights.saves));
 
   const [uploading, setUploading] = useState<string | null>(null);
   const [progress, setProgress] = useState(0);
@@ -224,11 +241,11 @@ const ReelEditSheet = ({ reel, onSave, onClose }: { reel: ReelData; onSave: (r: 
       duration,
       insights: {
         ...reel.insights,
-        views: parseInt(views) || 0,
-        likes: parseInt(likes) || 0,
-        comments: parseInt(comments) || 0,
-        shares: parseInt(shares) || 0,
-        saves: parseInt(saves) || 0,
+        views: parseInputNumber(views),
+        likes: parseInputNumber(likes),
+        comments: parseInputNumber(comments),
+        shares: parseInputNumber(shares),
+        saves: parseInputNumber(saves),
       },
     });
   };
@@ -326,7 +343,7 @@ const FieldArea = ({ label, value, onChange }: { label: string; value: string; o
 const NumField = ({ label, value, onChange }: { label: string; value: string; onChange: (v: string) => void }) => (
   <div>
     <label className="text-xs text-muted-foreground font-medium mb-0.5 block">{label}</label>
-    <input type="number" value={value} onChange={e => onChange(e.target.value)}
+    <input type="text" value={value} onChange={e => onChange(e.target.value)}
       className="w-full bg-secondary text-foreground rounded-lg px-3 py-2.5 text-sm border border-border focus:border-primary focus:outline-none" />
   </div>
 );

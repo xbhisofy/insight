@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
-import { ArrowLeft, Info, ArrowUp, ArrowDown, ChevronRight, ChevronLeft, X, Upload } from "lucide-react";
+import { ArrowLeft, Info, ArrowUp, ArrowDown, ChevronRight, ChevronLeft, X, Upload, Edit3 } from "lucide-react";
+import { parseInputNumber } from "@/lib/utils";
 
 const TikTokDots = () => (
   <div className="tiktok-loader my-4">
@@ -39,95 +40,106 @@ export default function ProfileAnalyticsPanel({ onClose }: ProfileAnalyticsPanel
   const [timeFilter, setTimeFilter] = useState("7 days");
 
   // Per-filter Data Persistence
-  const [dataStore, setDataStore] = useState<Record<string, any>>({
-    "7 days": {
-      overview: {
-        selectedMetric: "post_views",
-        metrics: {
-          post_views: { val: "868", trend: "+868" },
-          profile_views: { val: "6", trend: "+6" },
-          likes: { val: "41", trend: "+41" },
-          comments: { val: "0", trend: "0" },
-          shares: { val: "1", trend: "+1" },
-          rewards: { val: "$0.00", trend: "+$0.00" },
+  const [dataStore, setDataStore] = useState<Record<string, any>>(() => {
+    const saved = localStorage.getItem("profile_analytics_data");
+    if (saved) return JSON.parse(saved);
+    
+    return {
+      "7 days": {
+        overview: {
+          selectedMetric: "post_views",
+          metrics: {
+            post_views: { val: "868", trend: "+868" },
+            profile_views: { val: "6", trend: "+6" },
+            likes: { val: "41", trend: "+41" },
+            comments: { val: "0", trend: "0" },
+            shares: { val: "1", trend: "+1" },
+            rewards: { val: "$0.00", trend: "+$0.00" },
+          },
+          graphData: {
+            post_views: [0, 0, 0, 155, 0, 310, 465],
+            profile_views: [0, 1, 0, 2, 1, 4, 6],
+            likes: [0, 10, 5, 20, 15, 30, 41],
+            comments: [0, 0, 0, 0, 0, 0, 0],
+            shares: [0, 0, 0, 0, 0, 1, 1],
+            rewards: [0, 0, 0, 0, 0, 0, 0],
+          },
+          queries: [
+            { label: "daniel allan concert", pct: "33.2%", active: true },
+            { label: "daniel allan", pct: "16.7%", active: true },
+            { label: "daniel allen colley", pct: "16.7%", active: true },
+            { label: "Daniel allan", pct: "16.7%", active: true },
+            { label: "death is no more motivation edit", pct: "16.7%", active: true },
+          ],
+          topPosts: [
+            { id: 1, title: "The future of trading is almost here best Ai Of 2026 #viralityflooz", views: "1,020 views in the last 28 days", date: "Posted on Jan 28" },
+            { id: 2, title: "The future of trading is almost here best Ai Of 2026 #viralityflooz", views: "1,020 views in the last 28 days", date: "Posted on Jan 28" },
+            { id: 3, title: "The future of trading is almost here best Ai Of 2026 #viralityflooz", views: "1,020 views in the last 28 days", date: "Posted on Jan 27" },
+            { id: 4, title: "#howtogoviral #tiktoktips #girlssupportgirls #growontiktok #ho...", views: "208 views in the last 28 days", date: "3d ago" },
+            { id: 5, title: "what I learned about the algo as a TikTok intern #howtogoviral2025 #gir...", views: "172 views in the last 28 days", date: "5d ago" },
+          ]
         },
-        graphData: {
-          post_views: [0, 0, 0, 155, 0, 310, 465],
-          profile_views: [0, 1, 0, 2, 1, 4, 6],
-          likes: [0, 10, 5, 20, 15, 30, 41],
-          comments: [0, 0, 0, 0, 0, 0, 0],
-          shares: [0, 0, 0, 0, 0, 1, 1],
-          rewards: [0, 0, 0, 0, 0, 0, 0],
+        viewers: {
+          selectedMetric: "total_viewers",
+          insightTab: "gender",
+          metrics: {
+            total_viewers: { val: "3,224", trend: "-2,804 (-46.5%)" },
+            new_viewers: { val: "3,213", trend: "-2,680 (-45.5%)" },
+          },
+          graphData: {
+            total_viewers: [3224, 0, 0, 0, 0, 0, 200, 100],
+            new_viewers: [3213, 0, 0, 0, 0, 0, 100, 50]
+          },
+          genderData: [
+            { label: "Male", pct: "68%", color: "#00a1ff" },
+            { label: "Female", pct: "30%", color: "#00a1ff66" },
+            { label: "Other", pct: "2%", color: "#00a1ff1a" }
+          ]
         },
-        queries: [
-          { label: "daniel allan concert", pct: "33.2%", active: true },
-          { label: "daniel allan", pct: "16.7%", active: true },
-          { label: "daniel allen colley", pct: "16.7%", active: true },
-          { label: "Daniel allan", pct: "16.7%", active: true },
-          { label: "death is no more motivation edit", pct: "16.7%", active: true },
-        ],
-        topPosts: [
-          { id: 1, title: "The future of trading is almost here best Ai Of 2026 #viralityflooz", views: "1,020 views in the last 28 days", date: "Posted on Jan 28" },
-          { id: 2, title: "The future of trading is almost here best Ai Of 2026 #viralityflooz", views: "1,020 views in the last 28 days", date: "Posted on Jan 28" },
-          { id: 3, title: "The future of trading is almost here best Ai Of 2026 #viralityflooz", views: "1,020 views in the last 28 days", date: "Posted on Jan 27" },
-          { id: 4, title: "#howtogoviral #tiktoktips #girlssupportgirls #growontiktok #ho...", views: "208 views in the last 28 days", date: "3d ago" },
-          { id: 5, title: "what I learned about the algo as a TikTok intern #howtogoviral2025 #gir...", views: "172 views in the last 28 days", date: "5d ago" },
-        ]
-      },
-      viewers: {
-        selectedMetric: "total_viewers",
-        insightTab: "gender",
-        metrics: {
-          total_viewers: { val: "3,224", trend: "-2,804 (-46.5%)" },
-          new_viewers: { val: "3,213", trend: "-2,680 (-45.5%)" },
+        inspiration: {
+          topics: [
+            { id: 1, text: "Pemakaman Vidi Aliando Digelar Di Jakarta", count: "918.7M" },
+            { id: 2, text: "Konten Sule Soroti Rumah Duka Vidi Aldiano", count: "858.9M" },
+            { id: 3, text: "Sosok Vidi Aldiano Di Mata Agnez Mo", count: "833.7M" },
+            { id: 4, text: "Kematian Vidi Dikaitkan Dengan Ramalan Gumay", count: "831.5M" },
+            { id: 5, text: "Nadin Amizah Ungkap Detik Terakhir Vidi", count: "778.1M" },
+            { id: 6, text: "Deddy Hadir Di Pemakaman Vidi", count: "724.7M" },
+            { id: 7, text: "Sule Membuat Vlog Di Rumah Duka Vidi", count: "702.3M" },
+          ]
         },
-        graphData: {
-          total_viewers: [3224, 0, 0, 0, 0, 0, 200, 100],
-          new_viewers: [3213, 0, 0, 0, 0, 0, 100, 50]
+        followers: {
+          selectedMetric: "total_followers",
+          insightTab: "gender",
+          metrics: {
+            total_followers: { val: "18", trend: "All time" },
+            net_followers: { val: "-1", trend: "-1" },
+          },
+          graphData: {
+            total_followers: [18, 18, 18, 18, 18, 17, 17, 17],
+            net_followers: [0, 0, 0, 0, 0, -1, 0, 0]
+          },
+          genderData: [
+            { label: "Male", pct: "68%", color: "#00a1ff" },
+            { label: "Female", pct: "30%", color: "#00a1ff66" },
+            { label: "Other", pct: "2%", color: "#00a1ff1a" }
+          ]
         },
-        genderData: [
-          { label: "Male", pct: "68%", color: "#00a1ff" },
-          { label: "Female", pct: "30%", color: "#00a1ff66" },
-          { label: "Other", pct: "2%", color: "#00a1ff1a" }
-        ]
-      },
-      inspiration: {
-        topics: [
-          { id: 1, text: "Pemakaman Vidi Aliando Digelar Di Jakarta", count: "918.7M" },
-          { id: 2, text: "Konten Sule Soroti Rumah Duka Vidi Aldiano", count: "858.9M" },
-          { id: 3, text: "Sosok Vidi Aldiano Di Mata Agnez Mo", count: "833.7M" },
-          { id: 4, text: "Kematian Vidi Dikaitkan Dengan Ramalan Gumay", count: "831.5M" },
-          { id: 5, text: "Nadin Amizah Ungkap Detik Terakhir Vidi", count: "778.1M" },
-          { id: 6, text: "Deddy Hadir Di Pemakaman Vidi", count: "724.7M" },
-          { id: 7, text: "Sule Membuat Vlog Di Rumah Duka Vidi", count: "702.3M" },
-        ]
-      },
-      followers: {
-        selectedMetric: "total_followers",
-        insightTab: "gender",
-        metrics: {
-          total_followers: { val: "18", trend: "All time" },
-          net_followers: { val: "-1", trend: "-1" },
-        },
-        graphData: {
-          total_followers: [18, 18, 18, 18, 18, 17, 17, 17],
-          net_followers: [0, 0, 0, 0, 0, -1, 0, 0]
-        },
-        genderData: [
-          { label: "Male", pct: "68%", color: "#00a1ff" },
-          { label: "Female", pct: "30%", color: "#00a1ff66" },
-          { label: "Other", pct: "2%", color: "#00a1ff1a" }
-        ]
-      },
-      content: {
-        videos: [
-          { id: 1, date: "Mar 9", views: "1.2K", likes: "142", comments: "12" },
-          { id: 2, date: "Mar 8", views: "904", likes: "91", comments: "4" },
-          { id: 3, date: "Mar 7", views: "4.3K", likes: "330", comments: "35" },
-        ]
+        content: {
+          videos: [
+            { id: 1, date: "Mar 9", views: "1.2K", likes: "142", comments: "12" },
+            { id: 2, date: "Mar 8", views: "904", likes: "91", comments: "4" },
+            { id: 3, date: "Mar 7", views: "4.3K", likes: "330", comments: "35" },
+          ]
+        }
       }
-    }
+    };
   });
+
+  const handleSave = () => {
+    localStorage.setItem("profile_analytics_data", JSON.stringify(dataStore));
+    setIsEditing(false);
+  };
+
 
   const getFilterData = (filter: string) => {
     return dataStore[filter] || dataStore["7 days"]; // Fallback to 7 days structure
@@ -178,7 +190,7 @@ export default function ProfileAnalyticsPanel({ onClose }: ProfileAnalyticsPanel
     timerRef.current = setTimeout(() => {
       setIsEditing(prev => !prev);
       if (navigator.vibrate) navigator.vibrate(50);
-    }, 2000);
+    }, 500); // 500ms
   };
 
   const handlePointerUp = () => {
@@ -208,13 +220,18 @@ export default function ProfileAnalyticsPanel({ onClose }: ProfileAnalyticsPanel
             </h1>
             {isEditing ? (
               <button
-                onClick={() => setIsEditing(false)}
+                onClick={handleSave}
                 className="bg-primary text-primary-foreground px-4 py-1.5 rounded-full text-[13px] font-black shadow-lg shadow-primary/20"
               >
                 Done
               </button>
             ) : (
-              <div className="w-7" />
+              <button
+                onClick={() => setIsEditing(true)}
+                className="p-1 -mr-1"
+              >
+                <Edit3 className="w-6 h-6 text-foreground" />
+              </button>
             )}
           </div>
 
