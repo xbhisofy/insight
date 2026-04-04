@@ -36,6 +36,7 @@ const EditModal = ({ reel, onSave, onClose }: EditModalProps) => {
       setThumbnail(result.secure_url);
     } catch (err) {
       console.error("Thumbnail upload failed:", err);
+      alert("Thumbnail upload failed: " + (err instanceof Error ? err.message : "Network error"));
     }
     setUploading(null);
     setProgress(0);
@@ -51,6 +52,7 @@ const EditModal = ({ reel, onSave, onClose }: EditModalProps) => {
       setVideoUrl(result.secure_url);
     } catch (err) {
       console.error("Video upload failed:", err);
+      alert("Video upload failed: " + (err instanceof Error ? err.message : "Network error"));
     }
     setUploading(null);
     setProgress(0);

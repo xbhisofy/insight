@@ -30,6 +30,7 @@ export interface ReelInsights {
   reachedAudience: number;
   profileVisits: number;
   followsFromPost: number;
+  watchedFull: number; // percentage
   trafficSources: {
     forYouPage: number;
     following: number;
@@ -81,6 +82,7 @@ export const generateRandomReel = (index: number): ReelData => {
       reachedAudience: Math.floor(views * 0.8),
       profileVisits: Math.floor(views * 0.03),
       followsFromPost: Math.floor(views * 0.003),
+      watchedFull: 80,
       trafficSources: {
         forYouPage: Math.floor(Math.random() * 40 + 40),
         following: Math.floor(Math.random() * 20 + 5),
@@ -129,6 +131,7 @@ export const generateMockReels = (): ReelData[] => [
       views: 1240000, likes: 89400, comments: 3200, shares: 12500, saves: 45000,
       avgWatchTime: 24, totalPlayTime: 8267, reachedAudience: 980000,
       profileVisits: 34000, followsFromPost: 2800,
+      watchedFull: 80,
       trafficSources: { forYouPage: 72, following: 12, profile: 8, search: 4, sounds: 2, hashtags: 2 },
       audienceRegions: [
         { name: "India", percentage: 35 }, { name: "United States", percentage: 22 },
@@ -158,7 +161,7 @@ export const generateMockReels = (): ReelData[] => [
     insights: {
       views: 560000, likes: 42000, comments: 1800, shares: 8900, saves: 67000,
       avgWatchTime: 38, totalPlayTime: 5911, reachedAudience: 420000,
-      profileVisits: 12000, followsFromPost: 1500,
+      profileVisits: 12000, followsFromPost: 1500, watchedFull: 75,
       trafficSources: { forYouPage: 65, following: 18, profile: 5, search: 7, sounds: 3, hashtags: 2 },
       audienceRegions: [
         { name: "India", percentage: 28 }, { name: "United States", percentage: 25 },
@@ -188,7 +191,7 @@ export const generateMockReels = (): ReelData[] => [
     insights: {
       views: 3200000, likes: 245000, comments: 8900, shares: 34000, saves: 12000,
       avgWatchTime: 15, totalPlayTime: 13333, reachedAudience: 2800000,
-      profileVisits: 89000, followsFromPost: 7800,
+      profileVisits: 89000, followsFromPost: 7800, watchedFull: 65,
       trafficSources: { forYouPage: 82, following: 8, profile: 3, search: 2, sounds: 4, hashtags: 1 },
       audienceRegions: [
         { name: "United States", percentage: 30 }, { name: "India", percentage: 25 },
@@ -218,7 +221,7 @@ export const generateMockReels = (): ReelData[] => [
     insights: {
       views: 780000, likes: 56000, comments: 2400, shares: 15000, saves: 89000,
       avgWatchTime: 19, totalPlayTime: 4117, reachedAudience: 620000,
-      profileVisits: 28000, followsFromPost: 3200,
+      profileVisits: 28000, followsFromPost: 3200, watchedFull: 82,
       trafficSources: { forYouPage: 58, following: 22, profile: 10, search: 5, sounds: 1, hashtags: 4 },
       audienceRegions: [
         { name: "United States", percentage: 32 }, { name: "United Kingdom", percentage: 18 },
@@ -248,7 +251,7 @@ export const generateMockReels = (): ReelData[] => [
     insights: {
       views: 420000, likes: 31000, comments: 1200, shares: 5600, saves: 52000,
       avgWatchTime: 42, totalPlayTime: 4900, reachedAudience: 350000,
-      profileVisits: 9800, followsFromPost: 1100,
+      profileVisits: 9800, followsFromPost: 1100, watchedFull: 88,
       trafficSources: { forYouPage: 55, following: 25, profile: 8, search: 8, sounds: 1, hashtags: 3 },
       audienceRegions: [
         { name: "India", percentage: 40 }, { name: "United States", percentage: 18 },
@@ -278,7 +281,7 @@ export const generateMockReels = (): ReelData[] => [
     insights: {
       views: 2100000, likes: 198000, comments: 7200, shares: 45000, saves: 32000,
       avgWatchTime: 26, totalPlayTime: 15167, reachedAudience: 1800000,
-      profileVisits: 56000, followsFromPost: 5400,
+      profileVisits: 56000, followsFromPost: 5400, watchedFull: 78,
       trafficSources: { forYouPage: 78, following: 10, profile: 4, search: 3, sounds: 2, hashtags: 3 },
       audienceRegions: [
         { name: "United States", percentage: 35 }, { name: "India", percentage: 20 },

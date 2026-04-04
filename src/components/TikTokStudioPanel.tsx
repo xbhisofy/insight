@@ -1,6 +1,7 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { ArrowLeft, ChevronRight, Settings } from "lucide-react";
 import ProfileAnalyticsPanel from "./ProfileAnalyticsPanel";
+import { uploadToCloudinary } from "@/lib/cloudinary";
 
 const TikTokDots = () => (
   <div className="tiktok-loader my-4">
@@ -138,7 +139,7 @@ export default function TikTokStudioPanel({ onClose }: TikTokStudioPanelProps) {
         {/* Promo Banner */}
         <div className="bg-card rounded-[14px] p-2.5 flex items-center gap-3 border border-border active:bg-muted/50 transition-colors">
           <div className="w-[62px] h-[62px] bg-background rounded-[14px] flex-shrink-0 relative overflow-hidden flex items-center justify-center border border-border group">
-             <EditableImage isEditing={isEditing} />
+             <EditableImage id="promo_banner" isEditing={isEditing} />
              {!isEditing && (
                <div className="flex flex-col items-center justify-center bg-black w-full h-full relative p-1.5">
                   <div className="relative w-9 h-9 flex items-center justify-center mb-1">
@@ -204,7 +205,7 @@ export default function TikTokStudioPanel({ onClose }: TikTokStudioPanelProps) {
                     <EditableVal val={creator.id} isEditing={isEditing} />
                   </div>
                   <div className="w-[50px] h-[50px] rounded-full bg-muted flex-shrink-0 relative overflow-hidden border border-border">
-                    <EditableImage isEditing={isEditing} className="rounded-full" />
+                    <EditableImage id={`studio_creator_${creator.id}`} isEditing={isEditing} className="rounded-full" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <h3 className="text-foreground font-bold text-[15.5px] leading-none mb-1.5 truncate"><EditableVal val={creator.name} isEditing={isEditing} /></h3>
@@ -228,14 +229,51 @@ export default function TikTokStudioPanel({ onClose }: TikTokStudioPanelProps) {
 }
 
 // Editable helpers
-const EditableVal = ({ val, isEditing, className = "" }: { val: string | number; isEditing: boolean; className?: string }) => {
-  const [internalVal, setInternalVal] = useState(val);
+const EditableVal = ({ val, isEditing, className = "", onUpdate, id }: { val: string | number; isEditing: boolean; className?: string; onUpdate?: (v: string) => void; id?: string }) => {
+  const getInitialVal = () => {
+    if (onUpdate) return val;
+    try {
+      const saved = localStorage.getItem("tiktok_overrides");
+      if (saved) {
+        const overrides = JSON.parse(saved);
+        const overrideKey = id || String(val);
+        if (overrides[overrideKey] !== undefined) {
+           return overrides[overrideKey];
+        }
+      }
+    } catch(e) {}
+    return val;
+  };
+
+  const [internalVal, setInternalVal] = useState(getInitialVal);
+
+  useEffect(() => {
+    if (onUpdate) {
+      setInternalVal(val);
+    } else {
+      setInternalVal(getInitialVal());
+    }
+  }, [val, onUpdate, id]);
+
   return (
     <span 
       contentEditable={isEditing} 
       suppressContentEditableWarning 
       onPointerDown={e => { if (isEditing) e.stopPropagation(); }}
-      onBlur={(e) => setInternalVal(e.currentTarget.textContent || "")}
+      onBlur={(e) => {
+        const text = e.currentTarget.textContent || "";
+        setInternalVal(text);
+        if (onUpdate) {
+          onUpdate(text);
+        } else {
+          try {
+             const saved = localStorage.getItem("tiktok_overrides");
+             const overrides = saved ? JSON.parse(saved) : {};
+             overrides[id || String(val)] = text;
+             localStorage.setItem("tiktok_overrides", JSON.stringify(overrides));
+          } catch(err) {}
+        }
+      }}
       className={`outline-none transition-colors ${isEditing ? 'border-b border-dashed border-[#69c0ff] text-[#69c0ff] bg-[#69c0ff]/10 rounded px-1 min-w-[10px] inline-block whitespace-pre-wrap' : ''} ${className}`}
     >
       {internalVal}
@@ -243,14 +281,51 @@ const EditableVal = ({ val, isEditing, className = "" }: { val: string | number;
   );
 };
 
-const EditableImage = ({ src, isEditing, className = "" }: { src?: string; isEditing: boolean; className?: string }) => {
-  const [internalSrc, setInternalSrc] = useState(src || "");
+const EditableImage = ({ src, isEditing, className = "", onUpdate, id }: { src?: string; isEditing: boolean; className?: string; onUpdate?: (s: string) => void; id?: string }) => {
+  const getInitialVal = () => {
+    if (onUpdate) return src || "";
+    try {
+      const saved = localStorage.getItem("tiktok_image_overrides");
+      if (saved) {
+        const overrides = JSON.parse(saved);
+        if (id && overrides[id] !== undefined) return overrides[id];
+      }
+    } catch(e) {}
+    return src || "";
+  };
+
+  const [internalSrc, setInternalSrc] = useState(getInitialVal);
+  const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  useEffect(() => {
+    if (onUpdate) setInternalSrc(src || "");
+    else setInternalSrc(getInitialVal());
+  }, [src, onUpdate, id]);
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      setInternalSrc(URL.createObjectURL(file));
+      const preview = URL.createObjectURL(file);
+      setInternalSrc(preview);
+      if (onUpdate) onUpdate(preview);
+      
+      setIsUploading(true);
+      try {
+        const res = await uploadToCloudinary(file);
+        setInternalSrc(res.secure_url);
+        if (onUpdate) {
+          onUpdate(res.secure_url);
+        } else if (id) {
+          const saved = localStorage.getItem("tiktok_image_overrides");
+          const overrides = saved ? JSON.parse(saved) : {};
+          overrides[id] = res.secure_url;
+          localStorage.setItem("tiktok_image_overrides", JSON.stringify(overrides));
+        }
+      } catch (err) {
+        console.error(err);
+      }
+      setIsUploading(false);
       e.target.value = '';
     }
   };
@@ -266,7 +341,9 @@ const EditableImage = ({ src, isEditing, className = "" }: { src?: string; isEdi
         ) : (
           isEditing && (
             <div className="flex flex-col items-center gap-0.5">
-               <div className="text-white/90 text-[10px] text-center font-bold px-1.5 py-0.5 rounded bg-[#fe2c55]">Img</div>
+               <div className="text-white/90 text-[10px] text-center font-bold px-1.5 py-0.5 rounded bg-[#fe2c55] shadow-sm">
+                 {isUploading ? "..." : "Img"}
+               </div>
             </div>
           )
         )}

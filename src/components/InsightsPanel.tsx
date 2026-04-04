@@ -1,7 +1,7 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import { ReelData, formatNumber } from "@/lib/mockData";
 import { ArrowLeft, Play, Heart, MessageCircle, Share2, Bookmark, Info, ChevronRight, X, Save, Upload, Settings, Image as ImageIcon, Edit3 } from "lucide-react";
-import { parseInputNumber } from "@/lib/utils";
+import { parseInputNumber, parseDuration, formatDuration } from "@/lib/utils";
 
 interface InsightsPanelProps {
   reel: ReelData;
@@ -389,9 +389,9 @@ const OverviewTab = ({ ins, reel, isEditing, onUpdate }: { ins: ReelData["insigh
 
   const metricCards: { key: MetricKey; label: string; value: string; rawKey: string }[] = [
     { key: "views", label: "Video views", value: formatNumber(ins.views), rawKey: "views" },
-    { key: "totalPlayTime", label: "Total play time", value: `${Math.floor(ins.totalPlayTime / 60)}h:${(ins.totalPlayTime % 60).toString().padStart(2, '0')}m:${Math.floor(Math.random() * 60).toString().padStart(2, '0')}s`, rawKey: "totalPlayTime" },
+    { key: "totalPlayTime", label: "Total play time", value: formatDuration(ins.totalPlayTime), rawKey: "totalPlayTime" },
     { key: "avgWatchTime", label: "Average watch time", value: `${ins.avgWatchTime}s`, rawKey: "avgWatchTime" },
-    { key: "watchedFull", label: "Watched full video", value: "80%", rawKey: "watchedFull" },
+    { key: "watchedFull", label: "Watched full video", value: `${ins.watchedFull}%`, rawKey: "watchedFull" },
     { key: "followers", label: "New followers", value: formatNumber(ins.followsFromPost), rawKey: "followsFromPost" },
   ];
 
@@ -424,7 +424,29 @@ const OverviewTab = ({ ins, reel, isEditing, onUpdate }: { ins: ReelData["insigh
                   val={m.value} 
                   isEditing={isEditing} 
                   onUpdate={(v) => {
-                  onUpdate({ [m.rawKey]: parseInputNumber(v) });
+                    let newVal: number;
+                    if (m.key === "totalPlayTime") {
+                      newVal = parseDuration(v);
+                    } else if (m.key === "avgWatchTime") {
+                      newVal = parseDuration(v); // Also handles durations like 24s
+                    } else if (m.key === "watchedFull") {
+                       // handled as percentage? 
+                       newVal = parseInt(v.replace(/[^0-9]/g, '')) || 0;
+                    } else {
+                      newVal = parseInputNumber(v);
+                    }
+                    
+                    if (m.key === "views") {
+                        // Scale graph data proportionally
+                        const ratio = newVal / (ins.views || 1);
+                        const scaledViewsByDay = ins.viewsByDay.map(d => ({
+                            ...d,
+                            views: Math.round(d.views * ratio)
+                        }));
+                        onUpdate({ views: newVal, viewsByDay: scaledViewsByDay });
+                    } else {
+                        onUpdate({ [m.rawKey]: newVal });
+                    }
                 }} 
                 />
               </p>
@@ -741,7 +763,9 @@ const ViewersTab = ({ ins, isEditing, onUpdate }: { ins: ReelData["insights"]; i
 };
 
 /* ═══════ ENGAGEMENT TAB ═══════ */
-const EngagementTab = ({ ins, reel, isEditing }: { ins: ReelData["insights"]; reel: ReelData; isEditing: boolean }) => (
+const EngagementTab = ({ ins, reel, isEditing }: { ins: ReelData["insights"]; reel: ReelData; isEditing: boolean }) => {
+  const [muted, setMuted] = useState(true);
+  return (
   <div>
     <Card className="border-none">
        <div className="flex items-center gap-1.5 mb-3">
@@ -776,15 +800,31 @@ const EngagementTab = ({ ins, reel, isEditing }: { ins: ReelData["insights"]; re
       <p className="text-muted-foreground text-[12.5px] mt-1 mb-6 font-bold">
         <EditableVal val="Most viewers liked this video at 0:00." isEditing={isEditing} />
       </p>
-      <div className="w-full aspect-[16/9] max-h-[220px] mx-auto rounded-xl overflow-hidden relative mb-6 border border-border shadow-2xl">
+      
+      <div className="w-full aspect-[16/9] max-h-[220px] mx-auto rounded-xl overflow-hidden relative mb-6 border border-border shadow-2xl group">
         <EditableImage isEditing={isEditing} />
-        <img src={reel.thumbnail} alt="" className="w-full h-full object-cover" />
+        {reel.videoUrl ? (
+          <>
+            <video src={reel.videoUrl} className="w-full h-full object-cover" autoPlay loop muted={muted} playsInline />
+            <button 
+              onClick={() => setMuted(!muted)}
+              className="absolute bottom-3 right-3 z-20 p-1.5 bg-black/40 backdrop-blur-md rounded-full border border-white/10 opacity-0 group-hover:opacity-100 transition-opacity"
+            >
+              {muted ? <X className="w-3.5 h-3.5 text-white" /> : <Play className="w-3.5 h-3.5 text-white" />}
+            </button>
+          </>
+        ) : (
+          <img src={reel.thumbnail} alt="" className="w-full h-full object-cover" />
+        )}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <div className="w-12 h-12 bg-black/60 backdrop-blur-md rounded-full flex items-center justify-center border border-white/20">
-            <Play className="w-5 h-5 text-white ml-0.5" fill="currentColor" />
-          </div>
+          {!reel.videoUrl && (
+            <div className="w-12 h-12 bg-black/60 backdrop-blur-md rounded-full flex items-center justify-center border border-white/20">
+              <Play className="w-5 h-5 text-white ml-0.5" fill="currentColor" />
+            </div>
+          )}
         </div>
       </div>
+
       <div className="relative h-[60px] w-full">
          <svg className="w-full h-full" viewBox="0 0 300 60" preserveAspectRatio="none">
             <polyline points="0,10 30,25 60,32 100,38 150,42 200,45 250,48 300,50" fill="none" stroke="#00a1ff" strokeWidth="2.5" />
@@ -798,7 +838,9 @@ const EngagementTab = ({ ins, reel, isEditing }: { ins: ReelData["insights"]; re
       </div>
     </Card>
   </div>
-);
+  );
+};
+
 
 /* ═══════ INSPIRATION TAB ═══════ */
 const InspirationTab = ({ ins, isEditing }: { ins: ReelData["insights"]; isEditing: boolean }) => {
@@ -867,4 +909,6 @@ const SubTab = ({ label, active, onClick, isEditing }: { label: string; active: 
 );
 
 
+
 export default InsightsPanel;
+

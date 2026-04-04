@@ -19,17 +19,12 @@ const VideoDetail = ({ reel, onBack, onInsights, onLongPress, onSave }: VideoDet
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const triggered = useRef(false);
 
-  // Sync localReel with prop updates
-  useEffect(() => {
-    setLocalReel(reel);
-  }, [reel]);
-
   const handlePointerDown = useCallback(() => {
     triggered.current = false;
     timerRef.current = setTimeout(() => {
       triggered.current = true;
       setEditing(true);
-    }, 500); // reduced from 2000ms to 500ms for responsiveness
+    }, 500); 
   }, []);
 
   const handlePointerUp = useCallback(() => {
@@ -42,6 +37,33 @@ const VideoDetail = ({ reel, onBack, onInsights, onLongPress, onSave }: VideoDet
     setEditing(false);
   }, [onSave]);
 
+  const [playing, setPlaying] = useState(true);
+  const [muted, setMuted] = useState(true);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  const togglePlay = useCallback((e: React.PointerEvent) => {
+    if (triggered.current) return; 
+    if (!videoRef.current) return;
+    if (playing) {
+      videoRef.current.pause();
+      setPlaying(false);
+    } else {
+      videoRef.current.play();
+      setPlaying(true);
+    }
+  }, [playing]);
+
+  const toggleMute = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    setMuted(prev => !prev);
+  }, []);
+
+  useEffect(() => {
+    if (videoRef.current) {
+        videoRef.current.muted = muted;
+    }
+  }, [muted]);
+
   const r = localReel;
   const ins = r.insights;
 
@@ -50,19 +72,52 @@ const VideoDetail = ({ reel, onBack, onInsights, onLongPress, onSave }: VideoDet
       {/* Full screen thumbnail */}
       {/* Full screen media */}
       <div
-        className="absolute inset-0 select-none"
+        className="absolute inset-0 select-none cursor-pointer"
         onPointerDown={handlePointerDown}
         onPointerUp={handlePointerUp}
         onPointerLeave={handlePointerUp}
+        onClick={(e) => togglePlay(e as any)}
         onContextMenu={(e) => e.preventDefault()}
       >
         {r.videoUrl ? (
-          <video src={r.videoUrl} className="w-full h-full object-cover" autoPlay loop muted playsInline />
+          <video 
+            ref={videoRef}
+            src={r.videoUrl} 
+            className="w-full h-full object-cover" 
+            autoPlay 
+            loop 
+            muted={muted} 
+            playsInline 
+          />
         ) : (
           <img src={r.thumbnail} alt={r.title} className="w-full h-full object-cover" />
         )}
         <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, transparent 20%, transparent 50%, rgba(0,0,0,0.85) 100%)' }} />
+        
+        {/* Play/Pause overlay */}
+        {!playing && r.videoUrl && (
+            <div className="absolute inset-0 flex items-center justify-center bg-black/10 pointer-events-none">
+                <div className="w-16 h-16 bg-black/40 rounded-full flex items-center justify-center backdrop-blur-md border border-white/20">
+                    <Play className="w-8 h-8 text-white fill-white ml-1" />
+                </div>
+            </div>
+        )}
+
+        {/* Mute toggle button */}
+        {r.videoUrl && (
+            <button 
+                onClick={toggleMute}
+                className="absolute bottom-24 left-4 z-20 p-2 bg-black/40 backdrop-blur-md rounded-full border border-white/10"
+            >
+                {muted ? (
+                    <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M11 5L6 9H2v6h4l5 4V5zM23 9l-6 6M17 9l6 6" /></svg>
+                ) : (
+                    <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M11 5L6 9H2v6h4l5 4V5zM19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07" /></svg>
+                )}
+            </button>
+        )}
       </div>
+
 
       {/* Top bar */}
       <div className="absolute top-0 left-0 right-0 z-10 flex items-center justify-between px-4 pt-3">

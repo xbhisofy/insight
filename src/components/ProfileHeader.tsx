@@ -4,6 +4,7 @@ import { parseInputNumber } from "@/lib/utils";
 import { UserPlus, Grid3X3, Menu, Plus, Bookmark, Heart, Lock, Footprints, Share, ChevronDown } from "lucide-react";
 import avatar from "@/assets/avatar.jpg";
 import TikTokStudioPanel from "./TikTokStudioPanel";
+import { uploadToCloudinary } from "@/lib/cloudinary";
 
 interface ProfileData {
   username: string;
@@ -38,6 +39,7 @@ const ProfileHeader = ({ reels, activeTab, onTabChange, onSetReels }: ProfileHea
   const [editForm, setEditForm] = useState<ProfileData>(profile);
   const [postCount, setPostCount] = useState(reels.length.toString());
   const [showAnalytics, setShowAnalytics] = useState(false);
+  const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(() => {
     return localStorage.getItem("user_avatar") || null;
   });
@@ -72,16 +74,24 @@ const ProfileHeader = ({ reels, activeTab, onTabChange, onSetReels }: ProfileHea
     setEditing(false);
   };
 
-  const handleAvatarUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onload = (ev) => {
-        const dataUrl = ev.target?.result as string;
-        setAvatarPreview(dataUrl);
-        localStorage.setItem("user_avatar", dataUrl);
-      };
-      reader.readAsDataURL(file);
+      // Local preview immediately
+      const previewUrl = URL.createObjectURL(file);
+      setAvatarPreview(previewUrl);
+
+      setIsUploadingAvatar(true);
+      try {
+        const res = await uploadToCloudinary(file);
+        setAvatarPreview(res.secure_url);
+        localStorage.setItem("user_avatar", res.secure_url);
+      } catch (err) {
+        console.error("Avatar upload failed:", err);
+        alert("Avatar upload failed. Please try again.");
+      }
+      setIsUploadingAvatar(false);
+      e.target.value = '';
     }
   };
 
@@ -192,11 +202,16 @@ const ProfileHeader = ({ reels, activeTab, onTabChange, onSetReels }: ProfileHea
             <div className="p-4 space-y-4">
               {/* Avatar change */}
               <div className="flex flex-col items-center">
-                <div className="w-[80px] h-[80px] rounded-full overflow-hidden border-2 border-border mb-2">
+                <div className="w-[80px] h-[80px] rounded-full overflow-hidden border-2 border-border mb-2 relative">
                   <img src={avatarPreview || avatar} alt="Profile" className="w-full h-full object-cover" />
+                  {isUploadingAvatar && (
+                    <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
+                      <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+                    </div>
+                  )}
                 </div>
-                <label className="text-primary text-[13px] font-semibold cursor-pointer">
-                  Change photo
+                <label className={`text-primary text-[13px] font-semibold cursor-pointer ${isUploadingAvatar ? 'opacity-50 pointer-events-none' : ''}`}>
+                  {isUploadingAvatar ? 'Uploading...' : 'Change photo'}
                   <input type="file" accept="image/*" onChange={handleAvatarUpload} className="hidden" />
                 </label>
               </div>
