@@ -369,10 +369,10 @@ const OverviewContent = ({ isEditing, data, onUpdate }: { isEditing: boolean, da
   const queries = data.queries;
 
   const getLimit = (id: string) => {
-    if (id === "profile_views") return 6;
-    if (id === "likes") return 50;
-    if (id === "comments" || id === "shares") return 5;
-    return 465;
+    const values = graphData[id] || [];
+    const max = Math.max(...values, 1);
+    // Return a nice rounded max or just the max
+    return max;
   };
 
   return (
@@ -395,7 +395,22 @@ const OverviewContent = ({ isEditing, data, onUpdate }: { isEditing: boolean, da
               val={m.val}
               trend={m.trend}
               onClick={() => onUpdate({ selectedMetric: key })}
-              onUpdate={(nd) => onUpdate({ metrics: { ...data.metrics, [key]: { ...m, ...nd } } })}
+              onUpdate={(nd) => {
+                if (nd.val !== undefined) {
+                  const newVal = parseInputNumber(nd.val);
+                  const currentVal = parseInputNumber(m.val) || 1;
+                  const ratio = newVal / currentVal;
+                  const currentGraphData = graphData[key] || [];
+                  const scaledGraphData = currentGraphData.map((v: number) => Math.round(v * ratio));
+                  
+                  onUpdate({ 
+                    metrics: { ...data.metrics, [key]: { ...m, val: nd.val } },
+                    graphData: { ...graphData, [key]: scaledGraphData }
+                  });
+                } else {
+                  onUpdate({ metrics: { ...data.metrics, [key]: { ...m, ...nd } } });
+                }
+              }}
             />
           ))}
         </div>

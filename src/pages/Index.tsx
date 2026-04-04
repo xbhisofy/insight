@@ -105,7 +105,7 @@ const Index = () => {
       insights: {
         views: 0, likes: 0, comments: 0, shares: 0, saves: 0,
         avgWatchTime: 0, totalPlayTime: 0, reachedAudience: 0,
-        profileVisits: 0, followsFromPost: 0,
+        profileVisits: 0, followsFromPost: 0, watchedFull: 0,
         trafficSources: { forYouPage: 0, following: 0, profile: 0, search: 0, sounds: 0, hashtags: 0 },
         audienceRegions: [],
         viewsByDay: [],
