@@ -209,35 +209,11 @@ const AdminPanel = () => {
           </div>
         </div>
 
-        {/* Generate new key */}
-        <div className="bg-card rounded-xl p-4 space-y-3 border border-border">
-          <h3 className="text-sm font-medium text-foreground">Generate New Key</h3>
-          <Input
-            placeholder="Label (e.g., Punjab, Team-A)"
-            value={newLabel}
-            onChange={(e) => setNewLabel(e.target.value)}
-            className="bg-secondary border-border"
-          />
-          <div className="flex gap-2 items-center">
-            <Input
-              type="number"
-              placeholder="Days"
-              value={newDays}
-              onChange={(e) => setNewDays(parseInt(e.target.value) || 1)}
-              min={1}
-              max={365}
-              className="bg-secondary border-border w-24"
-            />
-            <span className="text-sm text-muted-foreground">days</span>
-          </div>
-          <Button
-            onClick={generateKey}
-            disabled={generating}
-            className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
-          >
-            <Plus className="w-4 h-4 mr-2" />
-            {generating ? "Generating..." : "Generate New Access Key"}
-          </Button>
+        {/* Monitoring mode only - Key generation moved to Telegram Bot for security */}
+        <div className="bg-zinc-900/50 rounded-xl p-4 border border-red-900/20">
+           <p className="text-xs text-red-500 font-mono text-center uppercase tracking-tighter">
+             Secure Monitoring Mode Active | Generation Disabled on Web
+           </p>
         </div>
 
         {/* Search */}
