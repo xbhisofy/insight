@@ -7,40 +7,59 @@ import { toast } from "sonner";
 import { Lock, Mail } from "lucide-react";
 
 const AdminLogin = () => {
-  const [email, setEmail] = useState(() => localStorage.getItem("admin_email") || "");
-  const [password, setPassword] = useState("");
+  const [passcode, setPasscode] = useState("");
   const [loading, setLoading] = useState(false);
+  const [attemptCount, setAttemptCount] = useState(0);
+  const [isLocked, setIsLocked] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const checkSession = async () => {
-      const { data } = await supabase.auth.getSession();
-      if (data.session) {
+    const checkAuth = () => {
+      const authState = localStorage.getItem("sys_admin_token_x9v2");
+      if (authState === "secured_true") {
         navigate("/system-x9v2-dashboard-manage-k8m-xyz789");
+      }
+      
+      const lockUntil = localStorage.getItem("sys_lock_until");
+      if (lockUntil && new Date().getTime() < parseInt(lockUntil)) {
+        setIsLocked(true);
+      } else {
+        localStorage.removeItem("sys_lock_until");
+        setIsLocked(false);
       }
     };
 
-    void checkSession();
+    checkAuth();
   }, [navigate]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
-    const cleanEmail = email.trim();
-    const { error } = await supabase.auth.signInWithPassword({
-      email: cleanEmail,
-      password,
-    });
-
-    if (error) {
-      toast.error(error.message || "Login failed");
-    } else {
-      localStorage.setItem("admin_email", cleanEmail);
-      toast.success("Welcome Admin!");
-      navigate("/system-x9v2-dashboard-manage-k8m-xyz789");
+    if (isLocked) {
+      toast.error("System locked. Please wait.");
+      return;
     }
 
+    if (passcode === "X9-V2-K8M-ALPHA-OMEGA-992") {
+      localStorage.setItem("sys_admin_token_x9v2", "secured_true");
+      setAttemptCount(0);
+      toast.success("Authentication successful.");
+      setTimeout(() => {
+        navigate("/system-x9v2-dashboard-manage-k8m-xyz789");
+      }, 500);
+    } else {
+      const newCount = attemptCount + 1;
+      setAttemptCount(newCount);
+      toast.error("Access Denied");
+      setPasscode("");
+      
+      if (newCount >= 3) {
+        setIsLocked(true);
+        localStorage.setItem("sys_lock_until", (new Date().getTime() + 5 * 60000).toString()); // 5 min lock
+        toast.error("System locked for 5 minutes due to multiple failed attempts.");
+      }
+    }
     setLoading(false);
   };
 
@@ -55,35 +74,27 @@ const AdminLogin = () => {
           <p className="text-muted-foreground text-sm">Sign in to manage access keys</p>
         </div>
 
-        <form onSubmit={handleLogin} className="space-y-4">
+        <form onSubmit={handleLogin} className="space-y-6">
           <div className="relative">
-            <Mail className="absolute left-3 top-3 w-4 h-4 text-muted-foreground" />
-            <Input
-              type="email"
-              placeholder="Admin email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="pl-10 bg-card border-border"
-              autoComplete="email"
-              required
-            />
-          </div>
-
-          <div className="relative">
-            <Lock className="absolute left-3 top-3 w-4 h-4 text-muted-foreground" />
+            <Lock className="absolute left-3 top-3 w-5 h-5 text-muted-foreground" />
             <Input
               type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="pl-10 bg-card border-border"
-              autoComplete="current-password"
+              placeholder="System Security Code"
+              value={passcode}
+              onChange={(e) => setPasscode(e.target.value)}
+              className="pl-10 h-12 bg-black border-zinc-800 text-center text-lg tracking-widest font-mono text-white placeholder:text-zinc-600 focus:border-red-500/50 transition-colors"
+              autoComplete="off"
+              disabled={isLocked || loading}
               required
             />
           </div>
 
-          <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? "Checking..." : "Sign In"}
+          <Button 
+             type="submit" 
+             className="w-full h-12 bg-red-950 hover:bg-red-900 text-red-200 border border-red-900/50 uppercase tracking-widest font-bold" 
+             disabled={loading || isLocked}
+          >
+            {isLocked ? "System Locked" : loading ? "Verifying..." : "Initialize"}
           </Button>
         </form>
       </div>

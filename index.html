@@ -46,6 +46,47 @@
           }
         }, { passive: false });
       })();
+      
+      // Security measures: Disable right-click, F12, Ctrl+Shift+I/J, Ctrl+U
+      document.addEventListener('contextmenu', event => event.preventDefault());
+      document.addEventListener('keydown', function(e) {
+          // F12
+          if(e.code === 'F12' || e.keyCode === 123) {
+              e.preventDefault();
+              return false;
+          }
+          // Ctrl+Shift+I (Chrome/Edge/Firefox)
+          if(e.ctrlKey && e.shiftKey && (e.code === 'KeyI' || e.keyCode === 73)) {
+              e.preventDefault();
+              return false;
+          }
+          // Ctrl+Shift+J (Chrome/Edge Console)
+          if(e.ctrlKey && e.shiftKey && (e.code === 'KeyJ' || e.keyCode === 74)) {
+              e.preventDefault();
+              return false;
+          }
+          // Ctrl+Shift+C (Chrome/Edge Inspect Element)
+          if(e.ctrlKey && e.shiftKey && (e.code === 'KeyC' || e.keyCode === 67)) {
+              e.preventDefault();
+              return false;
+          }
+          // Ctrl+U (View Source)
+          if(e.ctrlKey && (e.code === 'KeyU' || e.keyCode === 85)) {
+              e.preventDefault();
+              return false;
+          }
+      });
+
+      // Anti-debug trick: create a debug loop to freeze dev tools if opened
+      setInterval(function() {
+          const before = new Date().getTime();
+          debugger;
+          const after = new Date().getTime();
+          if (after - before > 100) {
+              document.body.innerHTML = "Access Denied";
+          }
+      }, 1000);
+
     </script>
     <style>
       html, body {

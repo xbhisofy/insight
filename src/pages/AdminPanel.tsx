@@ -39,22 +39,10 @@ const AdminPanel = () => {
   }, []);
 
   const checkAuth = async (): Promise<boolean> => {
-    const { data } = await supabase.auth.getSession();
-    const session = data.session;
+    const authState = localStorage.getItem("sys_admin_token_x9v2");
 
-    if (!session) {
+    if (authState !== "secured_true") {
       navigate("/system-x9v2-portal-auth-k8m-login-xyz789");
-      return false;
-    }
-
-    const { data: isAdmin, error } = await supabase.rpc("has_role", {
-      _user_id: session.user.id,
-      _role: "admin",
-    });
-
-    if (error || !isAdmin) {
-      toast.error("Admin access required");
-      navigate("/key-login");
       return false;
     }
 
@@ -173,8 +161,7 @@ const AdminPanel = () => {
   };
 
   const handleLogout = async () => {
-    await supabase.auth.signOut();
-    localStorage.removeItem("admin_auth");
+    localStorage.removeItem("sys_admin_token_x9v2");
     navigate("/system-x9v2-portal-auth-k8m-login-xyz789");
   };
 
@@ -199,10 +186,7 @@ const AdminPanel = () => {
           <h1 className="text-lg font-bold text-foreground">Admin Panel</h1>
         </div>
         <div className="flex items-center gap-2">
-          <button onClick={() => setShowPasswordModal(true)} className="text-muted-foreground p-2" title="Change Password">
-            <Lock className="w-5 h-5" />
-          </button>
-          <button onClick={handleLogout} className="text-muted-foreground p-2">
+          <button onClick={handleLogout} className="text-muted-foreground p-2 text-red-500 hover:text-red-400">
             <LogOut className="w-5 h-5" />
           </button>
         </div>
@@ -350,42 +334,6 @@ const AdminPanel = () => {
           </div>
         )}
       </div>
-      {/* Password Change Modal */}
-      {showPasswordModal && (
-        <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4" onClick={() => setShowPasswordModal(false)}>
-          <div className="bg-card rounded-xl p-6 w-full max-w-sm space-y-4 border border-border" onClick={(e) => e.stopPropagation()}>
-            <h3 className="text-lg font-bold text-foreground">Change Password</h3>
-            <div className="relative">
-              <Lock className="absolute left-3 top-3 w-4 h-4 text-muted-foreground" />
-              <Input
-                type="password"
-                placeholder="New Password"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                className="pl-10 bg-secondary border-border"
-              />
-            </div>
-            <div className="relative">
-              <Lock className="absolute left-3 top-3 w-4 h-4 text-muted-foreground" />
-              <Input
-                type="password"
-                placeholder="Confirm Password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                className="pl-10 bg-secondary border-border"
-              />
-            </div>
-            <div className="flex gap-2">
-              <Button variant="outline" onClick={() => setShowPasswordModal(false)} className="flex-1">
-                Cancel
-              </Button>
-              <Button onClick={handleChangePassword} disabled={changingPassword} className="flex-1">
-                {changingPassword ? "Changing..." : "Update"}
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
