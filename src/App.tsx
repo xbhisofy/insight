@@ -19,8 +19,8 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          <Route path="/admin-login" element={<AdminLogin />} />
-          <Route path="/admin" element={<AdminPanel />} />
+          <Route path="/system-x9v2-portal-auth-k8m-login-xyz789" element={<AdminLogin />} />
+          <Route path="/system-x9v2-dashboard-manage-k8m-xyz789" element={<AdminPanel />} />
           <Route path="/key-login" element={<KeyLogin />} />
           <Route
             path="/"

@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import { Lock, Mail } from "lucide-react";
 
 const AdminLogin = () => {
-  const [email, setEmail] = useState(() => localStorage.getItem("admin_email") || "xbhi81025@gmail.com");
+  const [email, setEmail] = useState(() => localStorage.getItem("admin_email") || "");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -16,7 +16,7 @@ const AdminLogin = () => {
     const checkSession = async () => {
       const { data } = await supabase.auth.getSession();
       if (data.session) {
-        navigate("/admin");
+        navigate("/system-x9v2-dashboard-manage-k8m-xyz789");
       }
     };
 
@@ -38,7 +38,7 @@ const AdminLogin = () => {
     } else {
       localStorage.setItem("admin_email", cleanEmail);
       toast.success("Welcome Admin!");
-      navigate("/admin");
+      navigate("/system-x9v2-dashboard-manage-k8m-xyz789");
     }
 
     setLoading(false);

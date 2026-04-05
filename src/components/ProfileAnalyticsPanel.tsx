@@ -417,8 +417,8 @@ const OverviewContent = ({ isEditing, data, onUpdate }: { isEditing: boolean, da
 
         <div className="relative h-[160px] mt-4 select-none">
           {[getLimit(selectedMetric), Math.floor(getLimit(selectedMetric) * 2 / 3), Math.floor(getLimit(selectedMetric) / 3)].map((v, i) => (
-            <div key={i} className="absolute right-0 text-[11px] text-muted-foreground/60 font-bold" style={{ top: `${i * 33}%`, transform: 'translateY(-50%)' }}>
-              <EditableVal val={v} isEditing={isEditing} />
+            <div key={i} className="absolute right-0 text-[11px] text-muted-foreground/80 font-bold z-20" style={{ top: `${i * 33}%`, transform: 'translateY(-50%)' }}>
+              <EditableVal val={v} isEditing={isEditing} id={`profile-y-label-${selectedMetric}-${i}`} />
             </div>
           ))}
 
@@ -1130,7 +1130,7 @@ const EditableVal = ({ val, isEditing, className = "", onUpdate, id }: { val: st
           } catch(err) {}
         }
       }}
-      className={`outline-none transition-all ${isEditing ? 'border-b border-dashed border-primary text-primary bg-primary/5 rounded px-1 min-w-[10px] inline-block whitespace-pre-wrap' : ''} ${className}`}
+      className={`outline-none transition-all ${isEditing ? 'border border-dashed border-[#fe2c55] text-foreground bg-[#fe2c55]/5 rounded px-1' : ''} ${className}`}
     >
       {internalVal}
     </span>

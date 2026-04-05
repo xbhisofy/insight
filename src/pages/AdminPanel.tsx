@@ -43,7 +43,7 @@ const AdminPanel = () => {
     const session = data.session;
 
     if (!session) {
-      navigate("/admin-login");
+      navigate("/system-x9v2-portal-auth-k8m-login-xyz789");
       return false;
     }
 
@@ -175,7 +175,7 @@ const AdminPanel = () => {
   const handleLogout = async () => {
     await supabase.auth.signOut();
     localStorage.removeItem("admin_auth");
-    navigate("/admin-login");
+    navigate("/system-x9v2-portal-auth-k8m-login-xyz789");
   };
 
   const filteredKeys = keys.filter(

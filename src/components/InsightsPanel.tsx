@@ -216,11 +216,27 @@ const InsightsPanel = ({ reel, onClose, onSave }: InsightsPanelProps) => {
 };
 
 /* ─── Helpers ─── */
-const EditableVal = ({ val, isEditing, className = "", onUpdate }: { val: string | number; isEditing: boolean; className?: string; onUpdate?: (v: string) => void }) => {
-  const [internalVal, setInternalVal] = useState(val);
+const EditableVal = ({ val, isEditing, className = "", onUpdate, id }: { val: string | number; isEditing: boolean; className?: string; onUpdate?: (v: string) => void; id?: string }) => {
+  const getInitialVal = () => {
+    if (onUpdate) return val;
+    try {
+      const saved = localStorage.getItem("tiktok_overrides");
+      if (saved) {
+        const overrides = JSON.parse(saved);
+        const overrideKey = id || String(val);
+        if (overrides[overrideKey] !== undefined) return overrides[overrideKey];
+      }
+    } catch(e) {}
+    return val;
+  };
+
+  const [internalVal, setInternalVal] = useState(getInitialVal);
+
   useEffect(() => {
-    setInternalVal(val);
-  }, [val]);
+    if (onUpdate) setInternalVal(val);
+    else setInternalVal(getInitialVal());
+  }, [val, onUpdate, id]);
+
   return (
     <span 
       contentEditable={isEditing} 
@@ -229,9 +245,18 @@ const EditableVal = ({ val, isEditing, className = "", onUpdate }: { val: string
       onBlur={(e) => {
         const text = e.currentTarget.textContent || "";
         setInternalVal(text);
-        if (onUpdate) onUpdate(text);
+        if (onUpdate) {
+            onUpdate(text);
+        } else {
+          try {
+             const saved = localStorage.getItem("tiktok_overrides");
+             const overrides = saved ? JSON.parse(saved) : {};
+             overrides[id || String(val)] = text;
+             localStorage.setItem("tiktok_overrides", JSON.stringify(overrides));
+          } catch(err) {}
+        }
       }}
-      className={`outline-none transition-all ${isEditing ? 'border-b border-dashed border-primary text-primary bg-primary/5 rounded px-1 min-w-[10px] inline-block' : ''} ${className}`}
+      className={`outline-none transition-all ${isEditing ? 'border border-dashed border-[#fe2c55] text-foreground bg-[#fe2c55]/5 rounded px-1 min-w-[20px] inline-block' : ''} ${className}`}
     >
       {internalVal}
     </span>
@@ -584,12 +609,16 @@ const DrawableGraph = ({
   return (
     <div className="relative pt-6 pb-4 bg-card rounded-xl border border-border shadow-inner">
       <div className="relative h-[160px] px-2.5">
-        <div className="absolute inset-0 flex flex-col justify-between py-2.5 pb-0">
+        <div className="absolute inset-0 flex flex-col justify-between py-2.5 pb-0 z-20 pointer-events-none">
           {[100, 66, 33, 0].map(p => (
-            <div key={p} className="flex items-center gap-2">
+            <div key={p} className="flex items-center gap-2 pointer-events-none">
               <div className="flex-1 border-t border-dashed border-border" />
-              <span className="text-[10px] font-black text-muted-foreground/30 w-8 text-right pr-1">
-                {p === 0 ? "0" : formatNumber(Math.round((p / 100) * maxVal))}
+              <span className="text-[10px] font-black text-muted-foreground/60 w-12 text-right pr-0 pointer-events-auto">
+                <EditableVal 
+                  val={p === 0 ? "0" : formatNumber(Math.round((p / 100) * maxVal))} 
+                  isEditing={isEditing} 
+                  id={`insight-y-label-${p}`}
+                />
               </span>
             </div>
           ))}
